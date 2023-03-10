@@ -1,10 +1,17 @@
 import AppLayout from "@/components/AppLayout";
+import Head from "next/head";
 
 const Home = () => {
   return (
-    <AppLayout>
-      <div>Hello world</div>
-    </AppLayout>
+    <>
+      <Head>
+        <meta charSet="utf-8" />
+        <title>outstagram</title>
+      </Head>
+      <AppLayout>
+        <div>Hello world</div>
+      </AppLayout>
+    </>
   );
 };
 
