@@ -9,7 +9,7 @@ const Home = () => {
         <title>outstagram</title>
       </Head>
       <AppLayout>
-        <div>Hello world</div>
+        <div>메인페이지</div>
       </AppLayout>
     </>
   );
