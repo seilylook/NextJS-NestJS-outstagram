@@ -1,11 +1,17 @@
 import { useCallback, useState, ChangeEvent } from "react";
-import { Button, Form, Input } from "antd";
 import Link from "next/link";
+
+import { Button, Form, Input } from "antd";
+import styled from "styled-components";
 
 type LoginProps = {
   onChangeId: (id: string) => void;
   onChangePassword: (password: string) => void;
 };
+
+const ButtonWrapper = styled.div`
+  margin-top: 10px;
+`;
 
 const LoginForm = () => {
   const [id, setId] = useState("");
@@ -36,14 +42,14 @@ const LoginForm = () => {
           required
         />
       </div>
-      <div>
+      <ButtonWrapper>
         <Button type="primary" htmlType="submit" loading={false}>
           로그인
         </Button>
-        <Link href="/signup">
+        <Link href="/signup" style={{ marginLeft: 5 }}>
           <Button>회원가입</Button>
         </Link>
-      </div>
+      </ButtonWrapper>
     </Form>
   );
 };
