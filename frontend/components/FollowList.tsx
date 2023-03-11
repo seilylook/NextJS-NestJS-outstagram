@@ -11,7 +11,7 @@ interface Props {
   data: FollowInfo[];
 }
 
-const FollowList: FC<Props> = ({ header, data }) => {
+const FollowList = ({ header, data }: Props) => {
   return (
     <List
       style={{ marginBottom: "20px" }}
