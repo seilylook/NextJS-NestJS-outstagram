@@ -1,4 +1,3 @@
-import React, { FC } from "react";
 import { List, Card, Button } from "antd";
 import { StopOutlined } from "@ant-design/icons";
 
@@ -6,10 +5,10 @@ type FollowInfo = {
   nickname: string;
 };
 
-interface Props {
+type Props = {
   header: string;
   data: FollowInfo[];
-}
+};
 
 const FollowList = ({ header, data }: Props) => {
   return (
