@@ -30,6 +30,9 @@ const reducer = (
       });
 
       console.log(state);
+
+    default:
+      return state;
   }
 };
 
