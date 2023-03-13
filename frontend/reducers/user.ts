@@ -1,35 +1,45 @@
 const LOG_IN = "LOG_IN" as const;
+const LOG_OUT = "LOG_OUT" as const;
+
+export const logIn = (data: User) => ({
+  type: LOG_IN,
+  data,
+});
+
+export const logOut = () => ({
+  type: LOG_OUT,
+});
 
 export type User = {
-  id: string;
+  id: number;
+  user_id: string;
   password: string;
   nickname: string;
 };
 
-export const logIn = (user: User) => ({
-  type: LOG_IN,
-  payload: user,
-});
+export type UserAction = ReturnType<typeof logIn> | ReturnType<typeof logOut>;
 
-type UserAction = ReturnType<typeof logIn>;
+export const initialState = {
+  isLoggedIn: false,
+  signUpData: {},
+  loginData: {},
+  user: null,
+};
 
-export type UserState = User[];
-
-const initialState: UserState = [];
-
-const reducer = (
-  state: UserState = initialState,
-  action: UserAction
-): UserState => {
+const reducer = (state = initialState, action: UserAction) => {
   switch (action.type) {
     case LOG_IN:
-      return state.concat({
-        id: action.payload.id,
-        password: action.payload.password,
-        nickname: action.payload.nickname,
-      });
+      return {
+        ...state,
+        isLoggedIn: true,
+        user: action.data,
+      };
 
-      console.log(state);
+    case LOG_OUT:
+      return {
+        ...state,
+        isLoggedIn: false,
+      };
 
     default:
       return state;
