@@ -1,4 +1,4 @@
-const ADD_POST = "ADD_POST" as const;
+const ADD_POST = "ADD_POST";
 
 export const addPost = {
   type: ADD_POST,
@@ -86,7 +86,9 @@ const reducer = (
       };
 
     default:
-      return state;
+      return {
+        ...state,
+      };
   }
 };
 

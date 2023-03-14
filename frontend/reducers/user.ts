@@ -12,14 +12,6 @@ export const initialState = {
   logInData: {},
 };
 
-const dummyUser = {
-  id: 1,
-  nickname: "kim",
-  Posts: [],
-  Followings: [],
-  Followers: [],
-};
-
 export type UserReducerState = typeof initialState;
 
 export const LOG_IN = "LOG_IN";
