@@ -1,48 +1,71 @@
-const LOG_IN = "LOG_IN" as const;
-const LOG_OUT = "LOG_OUT" as const;
-
-export const logIn = (data: User) => ({
-  type: LOG_IN,
-  data,
-});
-
-export const logOut = () => ({
-  type: LOG_OUT,
-});
+import produce from "immer";
 
 export type User = {
-  id: number;
-  user_id: string;
+  id: string;
   password: string;
-  nickname: string;
 };
-
-export type UserAction = ReturnType<typeof logIn> | ReturnType<typeof logOut>;
 
 export const initialState = {
   isLoggedIn: false,
-  signUpData: {},
-  loginData: {},
   user: null,
+  signUpData: {},
+  logInData: {},
 };
 
-const reducer = (state = initialState, action: UserAction) => {
+const dummyUser = {
+  id: 1,
+  nickname: "kim",
+  Posts: [],
+  Followings: [],
+  Followers: [],
+};
+
+export type UserReducerState = typeof initialState;
+
+export const LOG_IN = "LOG_IN";
+export const LOG_OUT = "LOG_OUT";
+
+export const logInAction = (data: User) => {
+  return {
+    type: LOG_IN,
+    data,
+  };
+};
+
+export const logoutAction = () => {
+  return {
+    type: LOG_OUT,
+  };
+};
+
+export type UserActions =
+  | ReturnType<typeof logInAction>
+  | ReturnType<typeof logoutAction>;
+
+const reducer = (
+  state: UserReducerState = initialState,
+  action: UserActions
+): UserReducerState => {
   switch (action.type) {
     case LOG_IN:
       return {
         ...state,
         isLoggedIn: true,
         user: action.data,
+        logInData: action.data,
       };
 
     case LOG_OUT:
       return {
         ...state,
         isLoggedIn: false,
+        user: null,
       };
 
     default:
-      return state;
+      return {
+        ...state,
+      };
   }
 };
 

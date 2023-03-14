@@ -1,17 +1,10 @@
 const ADD_POST = "ADD_POST" as const;
 
-export const addPost = (data: Post) => ({
+export const addPost = {
   type: ADD_POST,
-  data,
-});
-
-export type Post = {
-  content: string;
-  comment: string;
-  image: string;
 };
 
-export type PostAction = ReturnType<typeof addPost>;
+export type PostAction = typeof addPost;
 
 // mainPosts = [
 //  {
@@ -27,6 +20,17 @@ export type PostAction = ReturnType<typeof addPost>;
 //      ]
 //  }
 // ]
+const dummyPost = {
+  id: 2,
+  content: "더미 데이터 입니다.",
+  User: {
+    id: 1,
+    nickname: "kim",
+  },
+  Images: [],
+  Comments: [],
+};
+
 export const initialState = {
   mainPosts: [
     {
@@ -67,8 +71,20 @@ export const initialState = {
   postAdded: false,
 };
 
-const reducer = (state = initialState, action: PostAction) => {
+export type PostReducerState = typeof initialState;
+
+const reducer = (
+  state: PostReducerState = initialState,
+  action: PostAction
+): PostReducerState => {
   switch (action.type) {
+    case ADD_POST:
+      return {
+        ...state,
+        mainPosts: [dummyPost, ...state.mainPosts],
+        postAdded: true,
+      };
+
     default:
       return state;
   }

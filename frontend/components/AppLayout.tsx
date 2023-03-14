@@ -1,5 +1,7 @@
 import { ReactNode, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
+import { UserReducerState } from "@/reducers/user";
 
 import { Menu, Input, Row, Col } from "antd";
 import styled from "styled-components";
@@ -16,7 +18,7 @@ const SearchInput = styled(Input.Search)`
 `;
 
 const AppLayout = ({ children }: ChildrenProp) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn } = useSelector((state: UserReducerState) => state.user);
 
   return (
     <div>
@@ -37,11 +39,7 @@ const AppLayout = ({ children }: ChildrenProp) => {
         </Menu>
         <Row gutter={8}>
           <Col xs={24} md={6}>
-            {isLoggedIn ? (
-              <UserProfile setIsLoggedIn={setIsLoggedIn} />
-            ) : (
-              <LoginForm setIsLoggedIn={setIsLoggedIn} />
-            )}
+            {isLoggedIn ? <UserProfile /> : <LoginForm />}
           </Col>
           <Col xs={24} md={12}>
             {children}

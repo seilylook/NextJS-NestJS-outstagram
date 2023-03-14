@@ -1,12 +1,11 @@
-import { useCallback, useState, ChangeEvent } from "react";
+import { useCallback } from "react";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { logInAction } from "../reducers/user";
 
 import { Button, Form, Input } from "antd";
 import styled from "styled-components";
-
-type LoginProps = {
-  setIsLoggedIn: (diff: boolean) => void;
-};
+import useInput from "@/hooks/useInput";
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -16,22 +15,14 @@ const FormWrapper = styled(Form)`
   padding: 10px;
 `;
 
-const LoginForm = ({ setIsLoggedIn }: LoginProps) => {
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
-
-  const onChangeId = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setId(e.target.value);
-  }, []);
-
-  const onChangePassword = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  }, []);
+const LoginForm = () => {
+  const [id, onChangeId] = useInput("");
+  const [password, onChangePassword] = useInput("");
+  const dispatch = useDispatch();
 
   const onSubmitForm = useCallback(() => {
-    console.log(id, password);
-    setIsLoggedIn(true);
-  }, [id, password, setIsLoggedIn]);
+    dispatch(logInAction({ id, password }));
+  }, [id, password, dispatch]);
 
   return (
     <FormWrapper onFinish={onSubmitForm}>
@@ -45,6 +36,7 @@ const LoginForm = ({ setIsLoggedIn }: LoginProps) => {
         <br />
         <Input
           name="user-password"
+          type="password"
           value={password}
           onChange={onChangePassword}
           required
