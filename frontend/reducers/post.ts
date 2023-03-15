@@ -31,6 +31,30 @@ const dummyPost = {
   Comments: [],
 };
 
+export type PostType = {
+  id: number;
+  content: string;
+  User: {
+    id: number;
+    nickname: string;
+  };
+  Images: [
+    {
+      src: string;
+    }
+  ];
+  Comments: [
+    {
+      id: number;
+      User: {
+        id: number;
+        nickname: string;
+      };
+      content: string;
+    }
+  ];
+};
+
 export const initialState = {
   mainPosts: [
     {
@@ -53,13 +77,17 @@ export const initialState = {
       ],
       Comments: [
         {
+          id: 1,
           User: {
+            id: 2,
             nickname: "lee",
           },
           content: "첫 댓글이다",
         },
         {
+          id: 2,
           User: {
+            id: 3,
             nickname: "park",
           },
           content: "두번째 댓글이다.",

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Card, Image, Button, Popover, Avatar } from "antd";
+import { Card, Image, Button, Popover, Avatar, List } from "antd";
 import {
   EllipsisOutlined,
   HeartOutlined,
@@ -7,12 +7,17 @@ import {
   MessageOutlined,
   RetweetOutlined,
 } from "@ant-design/icons";
+import { PostType } from "@/reducers/post";
 import { RootReducer } from "@/reducers";
 
 import PostImages from "./PostImages";
 import { useCallback, useState } from "react";
 
-const PostCard = ({ post }) => {
+type PostProp = {
+  post: PostType;
+};
+
+const PostCard = ({ post }: PostProp) => {
   const { me } = useSelector((state: RootReducer) => state.user);
   const id = me?.id;
   const [liked, setLiked] = useState(false);
@@ -69,9 +74,25 @@ const PostCard = ({ post }) => {
           description={post.content}
         />
       </Card>
-      {commentFormOpened && <div></div>}
-      {/* <CommentForm />
-      <Comments /> */}
+      {commentFormOpened && (
+        <div>
+          {/* <CommentForm /> */}
+          <List
+            header={`${post.Comments.length}개의 댓글`}
+            itemLayout="horizontal"
+            dataSource={post.Comments}
+            renderItem={(item) => (
+              <List.Item key={item.id}>
+                <List.Item.Meta
+                  title={<div>{item.User.nickname}</div>}
+                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                  description={item.content}
+                />
+              </List.Item>
+            )}
+          />
+        </div>
+      )}
     </div>
   );
 };

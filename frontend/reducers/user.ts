@@ -1,7 +1,9 @@
 import produce from "immer";
 
 export type User = {
-  id: string;
+  id: number;
+  userId: string;
+  nickname: string;
   password: string;
 };
 
