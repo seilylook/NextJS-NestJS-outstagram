@@ -1,25 +1,10 @@
 import produce from "immer";
 
-export type User = {
-  id: number;
-  userId: string;
-  nickname: string;
-  password: string;
-};
-
-export const initialState = {
-  isLoggedIn: false,
-  me: null,
-  signUpData: {},
-  logInData: {},
-};
-
-export type UserReducerState = typeof initialState;
-
 export const LOG_IN = "LOG_IN";
 export const LOG_OUT = "LOG_OUT";
 
 export const logInAction = (data: User) => {
+  console.log(data);
   return {
     type: LOG_IN,
     data,
@@ -36,6 +21,30 @@ export type UserActions =
   | ReturnType<typeof logInAction>
   | ReturnType<typeof logoutAction>;
 
+type User = {
+  id: string;
+  password: string;
+};
+
+export type UserState = User[];
+
+const dummyUser = {
+  id: 100,
+  nickname: "admin",
+  Posts: [],
+  Followings: [],
+  Followers: [],
+};
+
+export const initialState = {
+  isLoggedIn: false,
+  signUpData: {},
+  logInData: {},
+  me: null || {},
+};
+
+export type UserReducerState = typeof initialState;
+
 const reducer = (
   state: UserReducerState = initialState,
   action: UserActions
@@ -45,7 +54,7 @@ const reducer = (
       return {
         ...state,
         isLoggedIn: true,
-        me: action.data,
+        me: dummyUser,
         logInData: action.data,
       };
 

@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { Card, Image, Button, Popover, Avatar, List } from "antd";
 import {
@@ -11,7 +12,7 @@ import { PostType } from "@/reducers/post";
 import { RootReducer } from "@/reducers";
 
 import PostImages from "./PostImages";
-import { useCallback, useState } from "react";
+import CommentForm from "./CommentForm";
 
 type PostProp = {
   post: PostType;
@@ -76,7 +77,7 @@ const PostCard = ({ post }: PostProp) => {
       </Card>
       {commentFormOpened && (
         <div>
-          {/* <CommentForm /> */}
+          <CommentForm post={post} />
           <List
             header={`${post.Comments.length}개의 댓글`}
             itemLayout="horizontal"
