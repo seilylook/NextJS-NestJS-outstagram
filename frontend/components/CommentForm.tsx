@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { PostType } from "@/reducers/post";
+import { PostType } from "@/types/PostType";
 
 import { Form, Input, Button } from "antd";
 import useInput from "@/hooks/useInput";

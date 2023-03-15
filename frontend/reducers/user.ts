@@ -40,7 +40,7 @@ export const initialState = {
   isLoggedIn: false,
   signUpData: {},
   logInData: {},
-  me: null || {},
+  me: null,
 };
 
 export type UserReducerState = typeof initialState;

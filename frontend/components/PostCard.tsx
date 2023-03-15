@@ -1,6 +1,11 @@
 import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
-import { Card, Image, Button, Popover, Avatar, List } from "antd";
+import { RootReducer } from "@/reducers";
+
+import { PostType } from "@/types/PostType";
+import { CommentType } from "@/types/CommentType";
+
+import { Card, Button, Popover, Avatar, List } from "antd";
 import {
   EllipsisOutlined,
   HeartOutlined,
@@ -8,9 +13,6 @@ import {
   MessageOutlined,
   RetweetOutlined,
 } from "@ant-design/icons";
-import { PostType } from "@/reducers/post";
-import { RootReducer } from "@/reducers";
-
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 
@@ -82,7 +84,7 @@ const PostCard = ({ post }: PostProp) => {
             header={`${post.Comments.length}개의 댓글`}
             itemLayout="horizontal"
             dataSource={post.Comments}
-            renderItem={(item) => (
+            renderItem={(item: CommentType) => (
               <List.Item key={item.id}>
                 <List.Item.Meta
                   title={<div>{item.User.nickname}</div>}

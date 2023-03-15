@@ -6,30 +6,6 @@ export const addPost = {
 
 export type PostAction = typeof addPost;
 
-export type PostType = {
-  id: number;
-  content: string;
-  User: {
-    id: number;
-    nickname: string;
-  };
-  Images: [
-    {
-      src: string;
-    }
-  ];
-  Comments: [
-    {
-      id: number;
-      User: {
-        id: number;
-        nickname: string;
-      };
-      content: string;
-    }
-  ];
-};
-
 const dummyPost = {
   id: 2,
   content: "더미 데이터 입니다.",
