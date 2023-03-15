@@ -6,31 +6,6 @@ export const addPost = {
 
 export type PostAction = typeof addPost;
 
-// mainPosts = [
-//  {
-//      id,
-//      User: {id, nickname},
-//      content,
-//      Images: []
-//      Comments: [
-//          {
-//              User: { nickname},
-//              content
-//          }
-//      ]
-//  }
-// ]
-const dummyPost = {
-  id: 2,
-  content: "더미 데이터 입니다.",
-  User: {
-    id: 1,
-    nickname: "kim",
-  },
-  Images: [],
-  Comments: [],
-};
-
 export type PostType = {
   id: number;
   content: string;
@@ -55,6 +30,31 @@ export type PostType = {
   ];
 };
 
+const dummyPost = {
+  id: 2,
+  content: "더미 데이터 입니다.",
+  User: {
+    id: 1,
+    nickname: "kim",
+  },
+  Images: [],
+  Comments: [],
+};
+
+// mainPosts = [
+//  {
+//      id,
+//      User: {id, nickname},
+//      content,
+//      Images: []
+//      Comments: [
+//          {
+//              User: { nickname},
+//              content
+//          }
+//      ]
+//  }
+// ]
 export const initialState = {
   mainPosts: [
     {
