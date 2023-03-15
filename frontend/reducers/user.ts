@@ -7,7 +7,7 @@ export type User = {
 
 export const initialState = {
   isLoggedIn: false,
-  user: null,
+  me: null,
   signUpData: {},
   logInData: {},
 };
@@ -43,7 +43,7 @@ const reducer = (
       return {
         ...state,
         isLoggedIn: true,
-        user: action.data,
+        me: action.data,
         logInData: action.data,
       };
 
@@ -51,7 +51,7 @@ const reducer = (
       return {
         ...state,
         isLoggedIn: false,
-        user: null,
+        me: null,
       };
 
     default:
