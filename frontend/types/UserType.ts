@@ -1,6 +1,15 @@
 export interface UserType {
   id: number;
   email: string;
-  nickname: string;
   password: string;
+  nickname: string;
+  Posts: {
+    id: number;
+  }[];
+  Followings: {
+    nickname: string;
+  }[];
+  Followers: {
+    nickname: string;
+  }[];
 }

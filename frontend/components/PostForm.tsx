@@ -1,13 +1,13 @@
 import { ChangeEvent, useCallback, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootReducer } from "@/reducers";
+import { RootReducerState } from "@/reducers";
 import { addPost } from "@/reducers/post";
 
 import { Form, Input, Button } from "antd";
 
 const PostForm = () => {
   const [text, setText] = useState("");
-  const { imagePaths } = useSelector((state: RootReducer) => state.post);
+  const { imagePaths } = useSelector((state: RootReducerState) => state.post);
   const dispatch = useDispatch();
   const imageInput = useRef<HTMLInputElement>(null);
 

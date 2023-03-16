@@ -5,14 +5,14 @@ import { PostType } from "@/types/PostType";
 import { Form, Input, Button } from "antd";
 import useInput from "@/hooks/useInput";
 import { useSelector } from "react-redux";
-import { RootReducer } from "@/reducers";
+import { RootReducerState } from "@/reducers";
 
 type CommentProp = {
   post: PostType;
 };
 
 const CommentForm = ({ post }: CommentProp) => {
-  const id = useSelector((state: RootReducer) => state.user.me?.id);
+  const id = useSelector((state: RootReducerState) => state.user.me?.id);
   const [commentText, onChangeCommentText] = useInput("");
   const dispatch = useDispatch();
 

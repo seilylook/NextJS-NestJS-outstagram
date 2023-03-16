@@ -1,6 +1,6 @@
 import AppLayout from "@/components/AppLayout";
 import { useSelector } from "react-redux";
-import { RootReducer } from "@/reducers";
+import { RootReducerState } from "@/reducers";
 
 import Head from "next/head";
 
@@ -8,8 +8,8 @@ import PostForm from "@/components/PostForm";
 import PostCard from "@/components/PostCard";
 
 const Home = () => {
-  const { isLoggedIn } = useSelector((state: RootReducer) => state.user);
-  const { mainPosts } = useSelector((state: RootReducer) => state.post);
+  const { me } = useSelector((state: RootReducerState) => state.user);
+  const { mainPosts } = useSelector((state: RootReducerState) => state.post);
 
   return (
     <>
@@ -18,7 +18,7 @@ const Home = () => {
         <title>outstagram</title>
       </Head>
       <AppLayout>
-        {isLoggedIn && <PostForm />}
+        {me && <PostForm />}
         {mainPosts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}

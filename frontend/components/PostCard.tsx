@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootReducer } from "@/reducers";
+import { RootReducerState } from "@/reducers";
 
 import { PostType } from "@/types/PostType";
 import { CommentType } from "@/types/CommentType";
@@ -22,7 +22,7 @@ type PostProp = {
 };
 
 const PostCard = ({ post }: PostProp) => {
-  const { me } = useSelector((state: RootReducer) => state.user);
+  const { me } = useSelector((state: RootReducerState) => state.user);
   const id = me?.id;
   const [liked, setLiked] = useState(false);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
