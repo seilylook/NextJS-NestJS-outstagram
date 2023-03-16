@@ -35,8 +35,8 @@ type User = {
 
 const dummyUser = (data: User) => ({
   ...data,
-  nickname: "kim",
   id: 1,
+  nickname: "kim",
   Posts: [{ id: 1 }],
   Followings: [
     { nickname: "부기초" },
@@ -75,7 +75,7 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
 
       case LOG_IN_SUCCESS:
         draft.logInLoading = false;
-        draft.me = dummyUser(action.data);
+        draft.me = action.data;
         draft.logInDone = true;
         break;
 
