@@ -9,7 +9,7 @@ const useInput = (initialValue: string): UserInputProps => {
   const [userForm, setUserForm] = useState(initialValue);
   const onChangeForm = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setUserForm(e.target.value);
+      setUserForm(e.currentTarget.value);
     },
     []
   );
