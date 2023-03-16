@@ -10,7 +10,15 @@ import {
   Global,
 } from "./styles";
 
-const ImagesZoom = ({ images, onClose }) => {
+type ImagesZoomProp = {
+  images: {
+    src: string;
+  }[];
+
+  onClose: () => void;
+};
+
+const ImagesZoom = ({ images, onClose }: ImagesZoomProp) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   return (

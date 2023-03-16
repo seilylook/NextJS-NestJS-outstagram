@@ -3,7 +3,13 @@ import { PlusOutlined } from "@ant-design/icons";
 
 import ImagesZoom from "./ImagesZoom";
 
-const PostImages = ({ images }) => {
+type ImageProp = {
+  images: {
+    src: string;
+  }[];
+};
+
+const PostImages = ({ images }: ImageProp) => {
   const [showImagesZoom, setShowImagesZoom] = useState(false);
 
   const onZoom = useCallback(() => {
