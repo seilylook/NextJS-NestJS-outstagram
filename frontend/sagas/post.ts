@@ -26,5 +26,5 @@ function* watchAddPost() {
 }
 
 export default function* postSaga() {
-  all([fork(watchAddPost)]);
+  yield all([fork(watchAddPost)]);
 }

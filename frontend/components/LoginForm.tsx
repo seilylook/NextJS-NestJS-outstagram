@@ -1,13 +1,12 @@
 import { useCallback } from "react";
 import Link from "next/link";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootReducerState } from "@/reducers";
 import { LOG_IN_REQUEST } from "@/reducers/user";
 
 import { Button, Form, Input } from "antd";
 import styled from "styled-components";
 import useInput from "@/hooks/useInput";
-import { useSelector } from "react-redux";
-import { RootReducerState } from "@/reducers";
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -33,10 +32,11 @@ const LoginForm = () => {
   return (
     <FormWrapper onFinish={onSubmitForm}>
       <div>
-        <label htmlFor="user-email">아이디</label>
+        <label htmlFor="user-email">이메일</label>
         <br />
         <Input
           name="user-email"
+          type="email"
           value={email}
           onChange={onChangeEmail}
           required
