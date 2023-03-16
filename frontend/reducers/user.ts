@@ -10,19 +10,14 @@ export const LOG_OUT_REQUEST = "LOG_OUT_REQUEST";
 export const LOG_OUT_SUCCESS = "LOG_OUT_SUCCESS";
 export const LOG_OUT_FAILURE = "LOG_OUT_FAILURE";
 
-export const logInAction = (data: { email: string; password: string }) => {
-  console.log(data);
-  return {
-    type: LOG_IN_REQUEST,
-    data,
-  };
-};
+export const logInAction = (data: { email: string; password: string }) => ({
+  type: LOG_IN_REQUEST,
+  data,
+});
 
-export const logoutAction = () => {
-  return {
-    type: LOG_OUT_REQUEST,
-  };
-};
+export const logOutAction = () => ({
+  type: LOG_OUT_REQUEST,
+});
 
 type User = {
   id: number;
@@ -64,7 +59,7 @@ export const initialState = {
   logOutError: null,
   signUpData: {},
   logInData: {},
-  me: {},
+  me: null,
 };
 
 export type UserReducerState = typeof initialState;

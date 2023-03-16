@@ -24,7 +24,6 @@ const LoginForm = () => {
   const dispatch = useDispatch();
 
   const onSubmitForm = useCallback(() => {
-    console.log(email, password);
     dispatch({
       type: LOG_IN_REQUEST,
       data: { email, password },
