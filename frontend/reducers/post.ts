@@ -35,6 +35,15 @@ const dummyPost = (data) => ({
   Comments: [],
 });
 
+const dummyComment = (data) => ({
+  id: shortId.generate(),
+  content: data,
+  User: {
+    id: 1,
+    nickname: "lee",
+  },
+});
+
 // mainPosts = [
 //  {
 //      id,
@@ -133,16 +142,16 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) => {
       };
 
     case ADD_COMMENT_SUCCESS:
-      const postIdx = state.mainPosts.findIndex(
+      const postIndex = state.mainPosts.findIndex(
         (v) => v.id === action.data.postId
       );
-      const post = state.mainPosts[postIdx];
-      const Comments = [dummyComment(action.data.content), ...post.Comments];
+      const post = { ...state.mainPosts[postIndex] };
+      post.Comments = [dummyComment(action.data.content), ...post.Comments];
       const mainPosts = [...state.mainPosts];
-      mainPosts[postIdx] = { ...post, Comments };
-
+      mainPosts[postIndex] = post;
       return {
         ...state,
+        mainPosts,
         addCommentLoading: false,
         addCommentDone: true,
       };
