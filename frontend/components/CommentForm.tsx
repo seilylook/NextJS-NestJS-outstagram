@@ -14,7 +14,7 @@ type CommentProp = {
 
 const CommentForm = ({ post }: CommentProp) => {
   const id = useSelector((state: RootReducerState) => state.user.me?.id);
-  const { addCommentDone } = useSelector(
+  const { addCommentLoading, addCommentDone } = useSelector(
     (state: RootReducerState) => state.post
   );
   const [commentText, onChangeCommentText, setText] = useInput("");
@@ -43,7 +43,7 @@ const CommentForm = ({ post }: CommentProp) => {
         onChange={onChangeCommentText}
         rows={4}
       />
-      <Button type="primary" htmlType="submit" loading={addCommentDone}>
+      <Button type="primary" htmlType="submit" loading={addCommentLoading}>
         등록
       </Button>
     </Form>
