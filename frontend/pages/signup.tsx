@@ -1,11 +1,13 @@
 import { ChangeEvent, useCallback, useState } from "react";
 import useInput from "@/hooks/useInput";
 import Head from "next/head";
+import { SIGN_UP_REQUEST } from "@/reducers/user";
 
 import { Form, Input, Button, Checkbox } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import AppLayout from "@/components/AppLayout";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
 
 const ErrorMessage = styled.div`
   color: red;
@@ -16,13 +18,15 @@ type SignUpProps = {
 };
 
 const SignUp = () => {
-  const [id, onChangeId] = useInput("");
+  const [email, onChangeEmail] = useInput("");
   const [nickname, onChangeNickname] = useInput("");
   const [password, onChangePassword] = useInput("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [term, setTerm] = useState(false);
   const [termError, setTermError] = useState(false);
+
+  const dispatch = useDispatch();
 
   const onChangePasswordCheck = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,9 +51,12 @@ const SignUp = () => {
         return setTermError(true);
       }
 
-      console.log(id, nickname, password);
+      dispatch({
+        type: SIGN_UP_REQUEST,
+        data: { email, password, nickname },
+      });
     },
-    [id, nickname, password, passwordCheck, term]
+    [email, nickname, password, passwordCheck, term]
   );
 
   return (
@@ -61,9 +68,15 @@ const SignUp = () => {
       <AppLayout>
         <Form onFinish={onSubmit} style={{ marginBottom: "10px" }}>
           <div>
-            <label htmlFor="user-id">아이디</label>
+            <label htmlFor="user-email">이메일</label>
             <br />
-            <Input name="user-id" value={id} required onChange={onChangeId} />
+            <Input
+              name="user-email"
+              type="email"
+              value={email}
+              required
+              onChange={onChangeEmail}
+            />
           </div>
           <div>
             <label htmlFor="user-nickname">닉네임</label>

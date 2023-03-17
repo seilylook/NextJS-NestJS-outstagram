@@ -12,7 +12,7 @@ const PostForm = () => {
   const imageInput = useRef<HTMLInputElement>(null);
 
   const onSubmit = useCallback(() => {
-    dispatch(addPost);
+    dispatch(addPost(text));
     setText("");
   }, [dispatch]);
 

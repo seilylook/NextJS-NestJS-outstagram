@@ -1,14 +1,30 @@
-const ADD_POST = "ADD_POST";
+import produce from "immer";
+import { AnyAction } from "redux";
+import { PostType } from "@/types/PostType";
 
-export const addPost = {
-  type: ADD_POST,
-};
+export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
+export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
+export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
+
+export const ADD_COMMENT_REQUEST = "ADD_COMMENT_REQUEST";
+export const ADD_COMMENT_SUCCESS = "ADD_COMMENT_SUCCESS";
+export const ADD_COMMENT_FAILURE = "ADD_COMMENT_FAILURE";
+
+export const addPost = (data) => ({
+  type: ADD_POST_REQUEST,
+  data,
+});
+
+export const addComent = (data) => ({
+  type: ADD_COMMENT_REQUEST,
+  data,
+});
 
 export type PostAction = typeof addPost;
 
 const dummyPost = {
   id: 2,
-  content: "더미 데이터 입니다.",
+  content: "더미데이터",
   User: {
     id: 1,
     nickname: "kim",
@@ -32,6 +48,12 @@ const dummyPost = {
 //  }
 // ]
 export const initialState = {
+  addPostLoading: false, // 게시물 작성 시도 중
+  addPostDone: false,
+  addPostError: null,
+  addCommentLoading: false, // 댓글 작성 시도 중
+  addCommentDone: false,
+  addCommentError: null,
   mainPosts: [
     {
       id: 1,
@@ -72,21 +94,54 @@ export const initialState = {
     },
   ],
   imagePaths: [],
-  postAdded: false,
 };
 
 export type PostReducerState = typeof initialState;
 
-const reducer = (
-  state: PostReducerState = initialState,
-  action: PostAction
-): PostReducerState => {
+const reducer = (state: PostReducerState = initialState, action: AnyAction) => {
   switch (action.type) {
-    case ADD_POST:
+    case ADD_POST_REQUEST:
       return {
         ...state,
+        addPostLoading: true,
+        addPostDone: false,
+        addPostError: null,
+      };
+    case ADD_POST_SUCCESS:
+      return {
+        ...state,
+        addPostLoading: false,
+        addPostDone: true,
         mainPosts: [dummyPost, ...state.mainPosts],
-        postAdded: true,
+      };
+
+    case ADD_POST_FAILURE:
+      return {
+        ...state,
+        addPostLoading: false,
+        addPostError: action.error,
+      };
+
+    case ADD_COMMENT_REQUEST:
+      return {
+        ...state,
+        addCommentLoading: true,
+        addCommentDone: false,
+        addCommentError: null,
+      };
+
+    case ADD_COMMENT_SUCCESS:
+      return {
+        ...state,
+        addCommentLoading: true,
+        addCommentDone: false,
+      };
+
+    case ADD_COMMENT_FAILURE:
+      return {
+        ...state,
+        addCommentLoading: false,
+        addCOmmentError: action.error,
       };
 
     default:

@@ -1,6 +1,7 @@
 import { ChangeEvent, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { PostType } from "@/types/PostType";
+import { addComent, ADD_COMMENT_REQUEST } from "@/reducers/post";
 
 import { Form, Input, Button } from "antd";
 import useInput from "@/hooks/useInput";
@@ -18,8 +19,10 @@ const CommentForm = ({ post }: CommentProp) => {
 
   const onSubmitComment = useCallback(
     (e: ChangeEvent) => {
-      console.log(id);
-      console.log(post.id, commentText);
+      dispatch({
+        type: ADD_COMMENT_REQUEST,
+        data: { content: commentText, userId: id, postId: post.id },
+      });
     },
     [commentText]
   );

@@ -6,6 +6,9 @@ import {
   LOG_OUT_REQUEST,
   LOG_OUT_SUCCESS,
   LOG_OUT_FAILURE,
+  SIGN_UP_REQUEST,
+  SIGN_UP_SUCCESS,
+  SIGN_UP_FAILURE,
 } from "../reducers/user";
 import axios from "axios";
 
@@ -25,7 +28,7 @@ function* logIn(action) {
     console.error(err);
     yield put({
       type: LOG_IN_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
     });
   }
 }
@@ -45,7 +48,27 @@ function* logOut() {
     console.error(err);
     yield put({
       type: LOG_OUT_FAILURE,
-      data: err.response.data,
+      error: err.response.data,
+    });
+  }
+}
+
+function signUpAPI(data) {
+  return axios.post("/signup", data);
+}
+
+function* signUp() {
+  try {
+    // const result = yield call(signUpAPI, action.data);
+    yield delay(1000);
+    yield put({
+      type: SIGN_UP_SUCCESS,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: SIGN_UP_FAILURE,
+      error: err.response.data,
     });
   }
 }
@@ -58,6 +81,10 @@ function* watchLogOut() {
   yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
 
+function* watchSignUp() {
+  yield takeLatest(SIGN_UP_REQUEST, signUp);
+}
+
 export default function* userSaga() {
-  yield all([fork(watchLogin), fork(watchLogOut)]);
+  yield all([fork(watchLogin), fork(watchLogOut), fork(watchSignUp)]);
 }
