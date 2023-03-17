@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react";
-import { useSelector } from "react-redux";
+import { useCallback, useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { RootReducerState } from "@/reducers";
+import { REMOVE_POST_REQUEST } from "@/reducers/post";
 
 import { PostType } from "@/types/PostType";
 import { CommentType } from "@/types/CommentType";
@@ -24,8 +25,12 @@ type PostProp = {
 const PostCard = ({ post }: PostProp) => {
   const { me } = useSelector((state: RootReducerState) => state.user);
   const id = me?.id;
+  const { removePostLoading, removePostDone } = useSelector(
+    (state: RootReducerState) => state.post
+  );
   const [liked, setLiked] = useState(false);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
+  const dispatch = useDispatch();
 
   const onToggleLike = useCallback(() => {
     setLiked((prev) => !prev);
@@ -34,6 +39,13 @@ const PostCard = ({ post }: PostProp) => {
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
   }, []);
+
+  const onRemovePost = useCallback(() => {
+    dispatch({
+      type: REMOVE_POST_REQUEST,
+      data: post.id,
+    });
+  }, [dispatch, post.id]);
 
   return (
     <div style={{ marginBottom: "20px" }}>
@@ -60,7 +72,13 @@ const PostCard = ({ post }: PostProp) => {
                 {id && post.User.id === id ? (
                   <>
                     <Button>수정</Button>
-                    <Button danger>삭제</Button>
+                    <Button
+                      danger
+                      onClick={onRemovePost}
+                      loading={removePostLoading}
+                    >
+                      삭제
+                    </Button>
                   </>
                 ) : (
                   <>
