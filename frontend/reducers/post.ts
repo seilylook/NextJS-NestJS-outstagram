@@ -16,19 +16,7 @@ export const REMOVE_POST_REQUEST = "REMOVE_POST_REQUEST";
 export const REMOVE_POST_SUCCESS = "REMOVE_POST_SUCCESS";
 export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
 
-export const addPost = (data) => ({
-  type: ADD_POST_REQUEST,
-  data,
-});
-
-export const addComent = (data) => ({
-  type: ADD_COMMENT_REQUEST,
-  data,
-});
-
-export type PostAction = typeof addPost;
-
-const dummyPost = (data) => ({
+const dummyPost = (data: any) => ({
   id: data.id,
   content: data.content,
   User: {
@@ -39,7 +27,7 @@ const dummyPost = (data) => ({
   Comments: [],
 });
 
-const dummyComment = (data) => ({
+const dummyComment = (data: any) => ({
   id: shortId.generate(),
   content: data,
   User: {

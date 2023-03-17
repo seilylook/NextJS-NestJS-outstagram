@@ -59,7 +59,7 @@ export const initialState = {
   me: null,
 };
 
-const dummyUser = (data) => ({
+const dummyUser = (data: any) => ({
   ...data,
   id: 1,
   nickname: "kim",
