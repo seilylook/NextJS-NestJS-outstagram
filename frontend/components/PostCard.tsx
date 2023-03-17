@@ -38,7 +38,9 @@ const PostCard = ({ post }: PostProp) => {
   return (
     <div style={{ marginBottom: "20px" }}>
       <Card
-        cover={post.Images[0] && <PostImages images={post.Images} />}
+        cover={
+          post.Images && post.Images[0] && <PostImages images={post.Images} />
+        }
         actions={[
           <RetweetOutlined key="retwitt" />,
           liked ? (

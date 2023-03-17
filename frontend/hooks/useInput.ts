@@ -1,8 +1,15 @@
-import { useState, useCallback, ChangeEvent } from "react";
+import {
+  useState,
+  useCallback,
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+} from "react";
 
 type UserInputProps = [
   string,
-  (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void,
+  Dispatch<SetStateAction<string>>
 ];
 
 const useInput = (initialValue: string): UserInputProps => {
@@ -14,7 +21,7 @@ const useInput = (initialValue: string): UserInputProps => {
     []
   );
 
-  return [userForm, onChangeForm];
+  return [userForm, onChangeForm, setUserForm];
 };
 
 export default useInput;

@@ -1,5 +1,7 @@
-import produce from "immer";
 import { AnyAction } from "redux";
+import produce from "immer";
+import shortId from "shortid";
+import fakerStatic from "faker";
 import { PostType } from "@/types/PostType";
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
@@ -22,16 +24,16 @@ export const addComent = (data) => ({
 
 export type PostAction = typeof addPost;
 
-const dummyPost = {
-  id: 2,
-  content: "더미데이터",
+const dummyPost = (data) => ({
+  id: shortId.generate(),
+  content: data,
   User: {
     id: 1,
     nickname: "kim",
   },
   Images: [],
   Comments: [],
-};
+});
 
 // mainPosts = [
 //  {
@@ -112,7 +114,7 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) => {
         ...state,
         addPostLoading: false,
         addPostDone: true,
-        mainPosts: [dummyPost, ...state.mainPosts],
+        mainPosts: [dummyPost(action.data), ...state.mainPosts],
       };
 
     case ADD_POST_FAILURE:
@@ -131,10 +133,18 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) => {
       };
 
     case ADD_COMMENT_SUCCESS:
+      const postIdx = state.mainPosts.findIndex(
+        (v) => v.id === action.data.postId
+      );
+      const post = state.mainPosts[postIdx];
+      const Comments = [dummyComment(action.data.content), ...post.Comments];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIdx] = { ...post, Comments };
+
       return {
         ...state,
-        addCommentLoading: true,
-        addCommentDone: false,
+        addCommentLoading: false,
+        addCommentDone: true,
       };
 
     case ADD_COMMENT_FAILURE:

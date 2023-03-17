@@ -1,13 +1,14 @@
 import { ChangeEvent, useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import useInput from "@/hooks/useInput";
 import Head from "next/head";
 import { SIGN_UP_REQUEST } from "@/reducers/user";
+import { RootReducerState } from "@/reducers";
 
 import { Form, Input, Button, Checkbox } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import AppLayout from "@/components/AppLayout";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
 
 const ErrorMessage = styled.div`
   color: red;
@@ -25,6 +26,9 @@ const SignUp = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [term, setTerm] = useState(false);
   const [termError, setTermError] = useState(false);
+  const { signUpLoading } = useSelector(
+    (state: RootReducerState) => state.user
+  );
 
   const dispatch = useDispatch();
 
@@ -124,7 +128,7 @@ const SignUp = () => {
             )}
           </div>
           <div style={{ marginTop: "10px" }}>
-            <Button type="primary" htmlType="submit" loading={false}>
+            <Button type="primary" htmlType="submit" loading={signUpLoading}>
               가입하기
             </Button>
           </div>

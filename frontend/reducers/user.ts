@@ -22,6 +22,10 @@ export const UNFOLLOW_REQUEST = "UNFOLLOW_REQUEST";
 export const UNFOLLOW_SUCCESS = "UNFOLLOW_SUCCESS";
 export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 
+export const CHANGE_NICKNAME_REQUEST = "CHANGE_NICKNAME_REQUEST";
+export const CHANGE_NICKNAME_SUCCESS = "CHANGE_NICKNAME_SUCCESS";
+export const CHANGE_NICKNAME_FAILURE = "CHANGE_NICKNAME_FAILURE";
+
 export const initialState = {
   logInLoading: false, // 로그인 시도 중
   logInDone: false,
@@ -42,6 +46,10 @@ export const initialState = {
   unfollowLoading: false, // 팔로우 취소 시도 중
   unfollowDone: false,
   unfollowError: null,
+
+  changeNicknameLoading: false, // 닉네임 변경 시도 중
+  changeNicknameDone: false,
+  changeNicknameError: null,
 
   signUpData: {},
   logInData: {},
@@ -121,6 +129,22 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case SIGN_UP_FAILURE:
         draft.signUpLoading = false;
         draft.signUpError = action.error;
+        break;
+
+      case CHANGE_NICKNAME_REQUEST:
+        draft.changeNicknameLoading = true;
+        draft.changeNicknameDone = false;
+        draft.changeNicknameError = null;
+        break;
+
+      case CHANGE_NICKNAME_SUCCESS:
+        draft.changeNicknameLoading = false;
+        draft.changeNicknameDone = true;
+        break;
+
+      case CHANGE_NICKNAME_FAILURE:
+        draft.changeNicknameLoading = false;
+        draft.changeNicknameError = action.error;
         break;
 
       default:
