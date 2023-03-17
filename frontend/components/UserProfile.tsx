@@ -40,7 +40,10 @@ const UserProfile = () => {
         </div>,
       ]}
     >
-      <Card.Meta avatar={<Avatar>SH</Avatar>} title="seilylook" />
+      <Card.Meta
+        avatar={<Avatar>{me.nickname[0]}</Avatar>}
+        title={me.nickname}
+      />
       <ButtonWrapper onClick={onLogOut} loading={logOutLoading}>
         로그아웃
       </ButtonWrapper>

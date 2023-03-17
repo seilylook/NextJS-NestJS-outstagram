@@ -10,46 +10,6 @@ export const LOG_OUT_REQUEST = "LOG_OUT_REQUEST";
 export const LOG_OUT_SUCCESS = "LOG_OUT_SUCCESS";
 export const LOG_OUT_FAILURE = "LOG_OUT_FAILURE";
 
-export const logInAction = (data: { email: string; password: string }) => ({
-  type: LOG_IN_REQUEST,
-  data,
-});
-
-export const logOutAction = () => ({
-  type: LOG_OUT_REQUEST,
-});
-
-type User = {
-  id: number;
-  nickname: string;
-  Posts: {
-    id: number;
-  }[];
-  Followings: {
-    nickname: string;
-  }[];
-  Followers: {
-    nickname: string;
-  }[];
-};
-
-const dummyUser = (data: User) => ({
-  ...data,
-  id: 1,
-  nickname: "kim",
-  Posts: [{ id: 1 }],
-  Followings: [
-    { nickname: "부기초" },
-    { nickname: "Chanho Lee" },
-    { nickname: "neue zeal" },
-  ],
-  Followers: [
-    { nickname: "부기초" },
-    { nickname: "Chanho Lee" },
-    { nickname: "neue zeal" },
-  ],
-});
-
 export const initialState = {
   logInLoading: false, // 로그인 시도 중
   logInDone: false,
@@ -75,7 +35,7 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
 
       case LOG_IN_SUCCESS:
         draft.logInLoading = false;
-        draft.me = action.data;
+        draft.me = { ...action.data, nickname: "kim" };
         draft.logInDone = true;
         break;
 
