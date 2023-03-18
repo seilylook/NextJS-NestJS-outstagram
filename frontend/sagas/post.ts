@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   all,
   fork,
@@ -22,7 +23,6 @@ import {
   REMOVE_POST_SUCCESS,
   REMOVE_POST_FAILURE,
 } from "@/reducers/post";
-import axios from "axios";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "@/reducers/user";
 import shortId from "shortid";
 
@@ -32,12 +32,10 @@ function loadPostsAPI() {
 
 function* loadPosts(action) {
   try {
-    // const result = yield call(addPostAPI, action.data)
-    yield delay(1000);
-
+    const result = yield call(loadPostsAPI);
     yield put({
       type: LOAD_POSTS_SUCCESS,
-      data: generateDummyPost(5),
+      data: result.data,
     });
   } catch (err) {
     console.error(err);
@@ -125,7 +123,7 @@ function* removePost(action) {
 }
 
 function* watchLoadPosts() {
-  yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
+  yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
 }
 
 function* watchAddPost() {
