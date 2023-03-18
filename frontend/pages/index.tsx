@@ -13,7 +13,7 @@ import PostCard from "@/components/PostCard";
 const Home = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootReducerState) => state.user);
-  const { mainPosts, loadPostsLoading } = useSelector(
+  const { mainPosts, loadPostsLoading, hadMorePosts } = useSelector(
     (state: RootReducerState) => state.post
   );
 
@@ -22,6 +22,26 @@ const Home = () => {
       type: LOAD_POSTS_REQUEST,
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    function onScroll() {
+      if (
+        window.scrollY + document.documentElement.clientHeight >
+        document.documentElement.scrollHeight - 300
+      ) {
+        if (hadMorePosts && !loadPostsLoading) {
+          dispatch({
+            type: LOAD_POSTS_REQUEST,
+            data: mainPosts[mainPosts.length - 1].id,
+          });
+        }
+      }
+    }
+    window.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [mainPosts, hadMorePosts, loadPostsLoading, dispatch]);
 
   return (
     <>

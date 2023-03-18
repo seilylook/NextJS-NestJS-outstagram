@@ -1,7 +1,7 @@
 import { useCallback, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootReducerState } from "@/reducers";
-import { addPost, ADD_POST_REQUEST } from "@/reducers/post";
+import { ADD_POST_REQUEST } from "@/reducers/post";
 
 import { Form, Input, Button } from "antd";
 import useInput from "@/hooks/useInput";
