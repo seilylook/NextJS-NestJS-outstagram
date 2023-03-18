@@ -112,6 +112,7 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
         draft.logOutLoading = false;
         draft.me = null;
         draft.logOutDone = true;
+        break;
 
       case LOG_OUT_FAILURE:
         draft.logOutLoading = false;
@@ -167,7 +168,10 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case FOLLOW_SUCCESS:
         draft.followLoading = false;
         draft.followDone = true;
-        draft.me.Followings.push({ id: action.data });
+        draft.me.Followings.push({
+          id: action.data.id,
+          nickname: action.data.nickname,
+        });
         break;
 
       case FOLLOW_FAILURE:
@@ -185,7 +189,7 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
         draft.unfollowLoading = false;
         draft.unfollowDone = true;
         draft.me.Followings = draft.me.Followings.filter(
-          (v) => v.id !== action.data
+          (v) => v.id !== action.data.id
         );
         break;
 

@@ -37,7 +37,7 @@ function* loadPosts(action) {
 
     yield put({
       type: LOAD_POSTS_SUCCESS,
-      data: generateDummyPost(10),
+      data: generateDummyPost(5),
     });
   } catch (err) {
     console.error(err);

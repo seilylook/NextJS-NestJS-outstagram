@@ -22,15 +22,22 @@ const FollowButton = ({ post }: PostProp) => {
     if (isFollowing) {
       dispatch({
         type: UNFOLLOW_REQUEST,
-        data: post.User.id,
+        data: {
+          id: post.User.id,
+          nickname: post.User.nickname,
+        },
       });
     } else {
       dispatch({
         type: FOLLOW_REQUEST,
-        data: post.User.id,
+        data: {
+          id: post.User.id,
+          nickname: post.User.nickname,
+        },
       });
     }
-  }, []);
+  }, [isFollowing, dispatch, post.User.id, post.User.nickname]);
+
   return (
     <Button onClick={onClickButton} loading={followLoading || unfollowLoading}>
       {isFollowing ? "언팔로우" : "팔로우"}
