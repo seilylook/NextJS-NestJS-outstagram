@@ -5,8 +5,11 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Posts } from './Posts';
+import { Comments } from './Comments';
 
 @Entity({ schema: 'outstagram', name: 'users' })
 export class Users {
@@ -35,4 +38,26 @@ export class Users {
 
   @OneToMany(() => Posts, (posts) => posts.UserId)
   OwnedUserPosts: Posts[];
+
+  @OneToMany(() => Comments, (comments) => comments.UserId)
+  OwnedUserComments: Comments[];
+
+  @ManyToOne(() => Posts, (posts) => posts.id, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn({ name: 'Like', referencedColumnName: 'id' })
+  Like: Posts;
+
+  @Column('int', { name: 'FollowerId' })
+  FollowerId: number | null;
+
+  @OneToMany(() => Users, (users) => users.FollowerId)
+  FollowerUser: Users[];
+
+  @Column('int', { name: 'FollowingId' })
+  FollowingId: number | null;
+
+  @OneToMany(() => Users, (users) => users.FollowingId)
+  FollowingUser: Users[];
 }

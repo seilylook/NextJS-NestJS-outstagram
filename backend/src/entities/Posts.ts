@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Comments } from './Comments';
 import { Users } from './Users';
 
 @Entity({ schema: 'outstagram', name: 'posts' })
@@ -32,4 +33,14 @@ export class Posts {
   })
   @JoinColumn({ name: 'postUserId', referencedColumnName: 'id' })
   PostUserId: Users;
+
+  @Column('int', { name: 'HashtagId' })
+  HashtagId: number | null;
+
+  @ManyToOne(() => Comments, (comments) => comments.id, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn({ name: 'postHatagId', referencedColumnName: 'id' })
+  PostHashtagId: Comments;
 }
