@@ -1,9 +1,9 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -14,8 +14,8 @@ export class Hashtags {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('varchar', { name: 'src', length: 200 })
-  src: string;
+  @Column('varchar', { name: 'name', length: 20 })
+  name: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -23,13 +23,10 @@ export class Hashtags {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column('int', { name: 'PostId', nullable: false })
-  PostId: number | null;
+  @DeleteDateColumn()
+  deletedAt: Date;
 
-  @ManyToOne(() => Posts, (posts) => posts.id, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn({ name: 'imagePostId', referencedColumnName: 'id' })
-  ImagePostId: Posts;
+  // 게시글과 해시태그 N:N
+  @ManyToMany(() => Posts, (posts) => posts.OwnedHashtagPosts)
+  Tags: Posts[];
 }

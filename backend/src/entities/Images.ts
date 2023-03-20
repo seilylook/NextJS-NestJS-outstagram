@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -23,7 +24,10 @@ export class Images {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column('int', { name: 'PostId', nullable: false })
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @Column('int', { name: 'PostId' })
   PostId: number | null;
 
   @ManyToOne(() => Posts, (posts) => posts.id, {

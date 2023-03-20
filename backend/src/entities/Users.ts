@@ -5,8 +5,9 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
+  DeleteDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Posts } from './Posts';
 import { Comments } from './Comments';
@@ -36,28 +37,50 @@ export class Users {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  // 사용자와 게시글 1:N
   @OneToMany(() => Posts, (posts) => posts.UserId)
-  OwnedUserPosts: Posts[];
+  OwnedPostsUser: Posts[];
 
+  // 사용자와 댓글 1:N
   @OneToMany(() => Comments, (comments) => comments.UserId)
-  OwnedUserComments: Comments[];
+  OwnedCommentsUser: Comments[];
 
-  @ManyToOne(() => Posts, (posts) => posts.id, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
+  // 좋아요
+  @ManyToMany(() => Posts, (posts) => posts.LikedPosts)
+  @JoinTable({
+    name: 'PostLikeUsers',
+    joinColumn: {
+      name: 'PostLikeUserId',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'UserLikedPostId',
+      referencedColumnName: 'id',
+    },
   })
-  @JoinColumn({ name: 'Like', referencedColumnName: 'id' })
-  Like: Posts;
+  OwnedLikedPostUsers: Posts[];
 
-  @Column('int', { name: 'FollowerId' })
-  FollowerId: number | null;
+  // 팔로우, 팔로잉
+  @ManyToMany(() => Users, (users) => users.id)
+  @JoinTable({
+    name: 'Followers',
+    joinColumn: {
+      name: 'Followers',
+      referencedColumnName: 'id',
+    },
+  })
+  Followers: Users[];
 
-  @OneToMany(() => Users, (users) => users.FollowerId)
-  FollowerUser: Users[];
-
-  @Column('int', { name: 'FollowingId' })
-  FollowingId: number | null;
-
-  @OneToMany(() => Users, (users) => users.FollowingId)
-  FollowingUser: Users[];
+  @ManyToMany(() => Users, (users) => users.id)
+  @JoinTable({
+    name: 'Followings',
+    joinColumn: {
+      name: 'Followings',
+      referencedColumnName: 'id',
+    },
+  })
+  Followings: Users[];
 }
