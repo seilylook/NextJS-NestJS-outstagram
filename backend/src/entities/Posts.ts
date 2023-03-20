@@ -49,7 +49,7 @@ export class Posts {
   OwnedCommentsPosts: Comments[];
 
   // 좋아요 누른 게시물 N:N
-  @ManyToMany(() => Users, (users) => users.OwnedLikedPostUsers)
+  @ManyToMany(() => Users, (users) => users.OwnedLikedPostsUsers)
   LikedPosts: Users[];
 
   // 게스글과 사진 1:N
@@ -57,7 +57,7 @@ export class Posts {
   OwnedImagesPosts: Images[];
 
   // 게시글과 해시태크 N:N
-  @ManyToMany(() => Hashtags, (hashtags) => hashtags.Tags)
+  @ManyToMany(() => Hashtags, (hashtags) => hashtags.Hashtags)
   @JoinTable({
     name: 'PostHashtags',
     joinColumn: {

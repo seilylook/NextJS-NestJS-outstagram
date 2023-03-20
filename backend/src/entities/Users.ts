@@ -11,6 +11,8 @@ import {
 } from 'typeorm';
 import { Posts } from './Posts';
 import { Comments } from './Comments';
+import { Followers } from './Followers';
+import { Followings } from './Followings';
 
 @Entity({ schema: 'outstagram', name: 'users' })
 export class Users {
@@ -61,26 +63,35 @@ export class Users {
       referencedColumnName: 'id',
     },
   })
-  OwnedLikedPostUsers: Posts[];
+  OwnedLikedPostsUsers: Posts[];
 
-  // 팔로우, 팔로잉
-  @ManyToMany(() => Users, (users) => users.id)
+  // 팔로우
+  @ManyToMany(() => Followers, (followers) => followers.FollowUsers)
   @JoinTable({
     name: 'Followers',
     joinColumn: {
-      name: 'Followers',
+      name: 'FollowerUserId',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'UserId',
       referencedColumnName: 'id',
     },
   })
-  Followers: Users[];
+  OwnedFollowersUser: Followers[];
 
-  @ManyToMany(() => Users, (users) => users.id)
+  // 팔로잉
+  @ManyToMany(() => Followings, (followings) => followings.FollowingUsers)
   @JoinTable({
-    name: 'Followings',
+    name: 'Followerings',
     joinColumn: {
-      name: 'Followings',
+      name: 'FollowingUserId',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'UserId',
       referencedColumnName: 'id',
     },
   })
-  Followings: Users[];
+  OwnedFollowingsUser: Followings[];
 }

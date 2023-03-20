@@ -28,5 +28,5 @@ export class Hashtags {
 
   // 게시글과 해시태그 N:N
   @ManyToMany(() => Posts, (posts) => posts.OwnedHashtagPosts)
-  Tags: Posts[];
+  Hashtags: Posts[];
 }
