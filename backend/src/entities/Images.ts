@@ -34,6 +34,6 @@ export class Images {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'imagePostId', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'ImagePostId', referencedColumnName: 'id' })
   ImagePostId: Posts;
 }

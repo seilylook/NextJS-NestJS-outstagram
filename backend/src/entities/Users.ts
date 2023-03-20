@@ -53,7 +53,7 @@ export class Users {
   // 좋아요
   @ManyToMany(() => Posts, (posts) => posts.UsersLikedPosts)
   @JoinTable({
-    name: 'LikedPosts',
+    name: 'likedPosts',
     joinColumn: {
       name: 'UserId',
       referencedColumnName: 'id',
@@ -68,7 +68,7 @@ export class Users {
   // 팔로우
   @ManyToMany(() => Followers, (followers) => followers.FollowUsers)
   @JoinTable({
-    name: 'Followers',
+    name: 'followers',
     joinColumn: {
       name: 'UserId',
       referencedColumnName: 'id',
@@ -83,7 +83,7 @@ export class Users {
   // 팔로잉
   @ManyToMany(() => Followings, (followings) => followings.FollowingUsers)
   @JoinTable({
-    name: 'Followerings',
+    name: 'follwings',
     joinColumn: {
       name: 'UserId',
       referencedColumnName: 'id',
