@@ -59,7 +59,7 @@ export class Posts {
   // 게시글과 해시태크 N:N
   @ManyToMany(() => Hashtags, (hashtags) => hashtags.HashtagedPosts)
   @JoinTable({
-    name: 'postHashtags',
+    name: 'hashtagedPosts',
     joinColumn: {
       name: 'PostId',
       referencedColumnName: 'id',
