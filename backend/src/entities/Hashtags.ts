@@ -27,6 +27,6 @@ export class Hashtags {
   deletedAt: Date;
 
   // 게시글과 해시태그 N:N
-  @ManyToMany(() => Posts, (posts) => posts.OwnedHashtagPosts)
-  Hashtags: Posts[];
+  @ManyToMany(() => Posts, (posts) => posts.OwnedHashtagsPosts)
+  HashtagedPosts: Posts[];
 }

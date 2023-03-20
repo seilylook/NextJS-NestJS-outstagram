@@ -51,15 +51,15 @@ export class Users {
   OwnedCommentsUser: Comments[];
 
   // 좋아요
-  @ManyToMany(() => Posts, (posts) => posts.LikedPosts)
+  @ManyToMany(() => Posts, (posts) => posts.UsersLikedPosts)
   @JoinTable({
-    name: 'PostLikeUsers',
+    name: 'LikedPosts',
     joinColumn: {
-      name: 'PostLikeUserId',
+      name: 'UserId',
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: 'UserLikedPostId',
+      name: 'PostId',
       referencedColumnName: 'id',
     },
   })
@@ -70,28 +70,28 @@ export class Users {
   @JoinTable({
     name: 'Followers',
     joinColumn: {
-      name: 'FollowerUserId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
       name: 'UserId',
       referencedColumnName: 'id',
     },
+    inverseJoinColumn: {
+      name: 'FollowerId',
+      referencedColumnName: 'id',
+    },
   })
-  OwnedFollowersUser: Followers[];
+  OwnedFollowersUsers: Followers[];
 
   // 팔로잉
   @ManyToMany(() => Followings, (followings) => followings.FollowingUsers)
   @JoinTable({
     name: 'Followerings',
     joinColumn: {
-      name: 'FollowingUserId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
       name: 'UserId',
       referencedColumnName: 'id',
     },
+    inverseJoinColumn: {
+      name: 'FollowingId',
+      referencedColumnName: 'id',
+    },
   })
-  OwnedFollowingsUser: Followings[];
+  OwnedFollowingsUsers: Followings[];
 }

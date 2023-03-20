@@ -41,7 +41,7 @@ export class Posts {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'postUserId', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'PostUserId', referencedColumnName: 'id' })
   PostUserId: Users;
 
   // 게시물에 대한 댓글 1:N
@@ -50,24 +50,24 @@ export class Posts {
 
   // 좋아요 누른 게시물 N:N
   @ManyToMany(() => Users, (users) => users.OwnedLikedPostsUsers)
-  LikedPosts: Users[];
+  UsersLikedPosts: Users[];
 
   // 게스글과 사진 1:N
   @OneToMany(() => Images, (images) => images.PostId)
   OwnedImagesPosts: Images[];
 
   // 게시글과 해시태크 N:N
-  @ManyToMany(() => Hashtags, (hashtags) => hashtags.Hashtags)
+  @ManyToMany(() => Hashtags, (hashtags) => hashtags.HashtagedPosts)
   @JoinTable({
     name: 'PostHashtags',
     joinColumn: {
-      name: 'PostHashtag',
+      name: 'PostId',
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: 'HashtagPosts',
+      name: 'HashtagId',
       referencedColumnName: 'id',
     },
   })
-  OwnedHashtagPosts: Hashtags[];
+  OwnedHashtagsPosts: Hashtags[];
 }

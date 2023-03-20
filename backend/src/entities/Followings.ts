@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Users } from './Users';
 
-@Entity({ schema: 'outstagram', name: 'users' })
+@Entity({ schema: 'outstagram', name: 'followings' })
 export class Followings {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
@@ -26,6 +26,6 @@ export class Followings {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToMany(() => Users, (users) => users.OwnedFollowingsUser)
+  @ManyToMany(() => Users, (users) => users.OwnedFollowingsUsers)
   FollowingUsers: Users[];
 }
