@@ -1,14 +1,26 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Users } from './Users';
 
 @Index('FollowerId', ['followerId'], {})
-@Entity('follow', { schema: 'react-nodebird' })
+@Entity({ schema: 'outstagram', name: 'follow' })
 export class Follow {
-  @Column('datetime', { name: 'createdAt' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column('datetime', { name: 'updatedAt' })
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @Column('int', { primary: true, name: 'FollowingId' })
   followingId: number;
@@ -16,14 +28,14 @@ export class Follow {
   @Column('int', { primary: true, name: 'FollowerId' })
   followerId: number;
 
-  @ManyToOne(() => Users, (users) => users.follows, {
+  @ManyToOne(() => Users, (users) => users.followers, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'FollowingId', referencedColumnName: 'id' }])
   following: Users;
 
-  @ManyToOne(() => Users, (users) => users.follows2, {
+  @ManyToOne(() => Users, (users) => users.followings, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })

@@ -1,5 +1,13 @@
-import { Controller, Body, Post, UseGuards, Req, Res } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Controller,
+  Body,
+  Post,
+  Get,
+  UseGuards,
+  Req,
+  Res,
+} from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { User } from '../common/decoratos/user.decorator';
 import { NotLoggedInGuard } from '../auth/not-logged-in.guard';

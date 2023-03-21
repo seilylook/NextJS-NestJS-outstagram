@@ -1,15 +1,18 @@
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Posts } from './Posts';
 
 @Index('PostId', ['postId'], {})
-@Entity('images', { schema: 'react-nodebird' })
+@Entity({ schema: 'outstagram', name: 'images' })
 export class Images {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
@@ -17,11 +20,14 @@ export class Images {
   @Column('varchar', { name: 'src', length: 200 })
   src: string;
 
-  @Column('datetime', { name: 'createdAt' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column('datetime', { name: 'updatedAt' })
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @Column('int', { name: 'PostId', nullable: true })
   postId: number | null;

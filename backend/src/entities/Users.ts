@@ -1,9 +1,12 @@
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   Index,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Comments } from './Comments';
 import { Follow } from './Follow';
@@ -11,7 +14,7 @@ import { Like } from './Like';
 import { Posts } from './Posts';
 
 @Index('email', ['email'], { unique: true })
-@Entity('users', { schema: 'react-nodebird' })
+@Entity({ schema: 'outstagram', name: 'users' })
 export class Users {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
@@ -25,20 +28,23 @@ export class Users {
   @Column('varchar', { name: 'password', length: 100 })
   password: string;
 
-  @Column('datetime', { name: 'createdAt' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column('datetime', { name: 'updatedAt' })
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @OneToMany(() => Comments, (comments) => comments.user)
   comments: Comments[];
 
   @OneToMany(() => Follow, (follow) => follow.following)
-  follows: Follow[];
+  followers: Follow[];
 
   @OneToMany(() => Follow, (follow) => follow.follower)
-  follows2: Follow[];
+  followings: Follow[];
 
   @OneToMany(() => Like, (like) => like.user)
   likes: Like[];

@@ -1,11 +1,14 @@
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Comments } from './Comments';
 import { Images } from './Images';
@@ -15,7 +18,7 @@ import { Users } from './Users';
 
 @Index('UserId', ['userId'], {})
 @Index('RetweetId', ['retweetId'], {})
-@Entity('posts', { schema: 'react-nodebird' })
+@Entity({ schema: 'outstagram', name: 'posts' })
 export class Posts {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
@@ -23,11 +26,14 @@ export class Posts {
   @Column('text', { name: 'content' })
   content: string;
 
-  @Column('datetime', { name: 'createdAt' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column('datetime', { name: 'updatedAt' })
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @Column('int', { name: 'UserId', nullable: true })
   userId: number | null;

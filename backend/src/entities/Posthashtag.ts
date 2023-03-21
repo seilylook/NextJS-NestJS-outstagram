@@ -1,15 +1,27 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Hashtags } from './Hashtags';
 import { Posts } from './Posts';
 
 @Index('PostId', ['postId'], {})
-@Entity('posthashtag', { schema: 'react-nodebird' })
+@Entity({ schema: 'outstagram', name: 'posthashtag' })
 export class Posthashtag {
-  @Column('datetime', { name: 'createdAt' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column('datetime', { name: 'updatedAt' })
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @Column('int', { primary: true, name: 'HashtagId' })
   hashtagId: number;

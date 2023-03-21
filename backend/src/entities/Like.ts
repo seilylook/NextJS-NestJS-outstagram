@@ -1,33 +1,45 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
-import { Posts } from "./Posts";
-import { Users } from "./Users";
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Posts } from './Posts';
+import { Users } from './Users';
 
-@Index("UserId", ["userId"], {})
-@Entity("like", { schema: "react-nodebird" })
+@Index('UserId', ['userId'], {})
+@Entity({ schema: 'outstagram', name: 'like' })
 export class Like {
-  @Column("datetime", { name: "createdAt" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column("datetime", { name: "updatedAt" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column("int", { primary: true, name: "PostId" })
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @Column('int', { primary: true, name: 'PostId' })
   postId: number;
 
-  @Column("int", { primary: true, name: "UserId" })
+  @Column('int', { primary: true, name: 'UserId' })
   userId: number;
 
   @ManyToOne(() => Posts, (posts) => posts.likes, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
-  @JoinColumn([{ name: "PostId", referencedColumnName: "id" }])
+  @JoinColumn([{ name: 'PostId', referencedColumnName: 'id' }])
   post: Posts;
 
   @ManyToOne(() => Users, (users) => users.likes, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
-  @JoinColumn([{ name: "UserId", referencedColumnName: "id" }])
+  @JoinColumn([{ name: 'UserId', referencedColumnName: 'id' }])
   user: Users;
 }

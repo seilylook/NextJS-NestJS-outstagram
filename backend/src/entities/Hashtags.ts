@@ -1,7 +1,15 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Posthashtag } from './Posthashtag';
 
-@Entity('hashtags', { schema: 'react-nodebird' })
+@Entity({ schema: 'outstagram', name: 'hashtags' })
 export class Hashtags {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
@@ -9,11 +17,14 @@ export class Hashtags {
   @Column('varchar', { name: 'name', length: 20 })
   name: string;
 
-  @Column('datetime', { name: 'createdAt' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column('datetime', { name: 'updatedAt' })
+  @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @OneToMany(() => Posthashtag, (posthashtag) => posthashtag.hashtag)
   posthashtags: Posthashtag[];
