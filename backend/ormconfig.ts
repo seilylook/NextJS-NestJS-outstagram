@@ -28,7 +28,7 @@ const config: TypeOrmModuleOptions = {
     Like,
     Posthashtag,
   ],
-  synchronize: true, // 처음 연결만 true 다음부터는 false 해줘야한다.
+  synchronize: false, // 처음 연결만 true 다음부터는 false 해줘야한다.
   autoLoadEntities: true,
   charset: 'utf8mb4',
   logging: true,
