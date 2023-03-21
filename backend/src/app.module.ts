@@ -23,6 +23,7 @@ import * as ormconfig from '../ormconfig';
     Users,
     Posts,
     TypeOrmModule.forRoot(ormconfig),
+    TypeOrmModule.forFeature([Users, Posts]),
   ],
   controllers: [AppController, UsersController, PostsController],
   providers: [AppService, UsersService, PostsService],
