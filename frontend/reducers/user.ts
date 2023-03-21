@@ -93,8 +93,8 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
 
       case LOG_IN_SUCCESS:
         draft.logInLoading = false;
-        draft.me = action.data;
         draft.logInDone = true;
+        draft.me = action.data;
         break;
 
       case LOG_IN_FAILURE:

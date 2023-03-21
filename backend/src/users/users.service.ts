@@ -1,14 +1,20 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Repository, DataSource } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from 'src/entities/Users';
 import * as bcrypt from 'bcrypt';
+import { Users } from '../entities/Users';
+import { Posts } from '../entities/Posts';
+import { Follow } from '../entities/Follow';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(Users)
     private userRepository: Repository<Users>,
+    @InjectRepository(Posts)
+    private postRepository: Repository<Posts>,
+    @InjectRepository(Follow)
+    private followerRepository: Repository<Follow>,
     private dataSource: DataSource,
   ) {}
 
@@ -33,6 +39,7 @@ export class UsersService {
         nickname,
         password: hashedPassword,
       });
+
       await queryRunner.commitTransaction();
       return true;
     } catch (error) {

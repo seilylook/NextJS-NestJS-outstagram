@@ -9,10 +9,14 @@ import { UsersModule } from './users/users.module';
 import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Users } from './entities/Users';
-import { Posts } from './entities/Posts';
 import { AuthModule } from './auth/auth.module';
 import * as ormconfig from '../ormconfig';
+import { Users } from './entities/Users';
+import { Posts } from './entities/Posts';
+import { Comments } from './entities/Comments';
+import { Images } from './entities/Images';
+import { Hashtags } from './entities/Hashtags';
+import { Follow } from './entities/Follow';
 
 @Module({
   imports: [
@@ -25,7 +29,14 @@ import * as ormconfig from '../ormconfig';
     Users,
     Posts,
     TypeOrmModule.forRoot(ormconfig),
-    TypeOrmModule.forFeature([Users, Posts]),
+    TypeOrmModule.forFeature([
+      Users,
+      Posts,
+      Comments,
+      Images,
+      Hashtags,
+      Follow,
+    ]),
   ],
   controllers: [AppController, UsersController, PostsController],
   providers: [AppService, UsersService, PostsService],

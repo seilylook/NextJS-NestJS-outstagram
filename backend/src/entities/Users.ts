@@ -1,97 +1,48 @@
 import {
   Column,
   Entity,
-  PrimaryGeneratedColumn,
+  Index,
   OneToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-  ManyToMany,
-  JoinTable,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Posts } from './Posts';
 import { Comments } from './Comments';
-import { Followers } from './Followers';
-import { Followings } from './Followings';
+import { Follow } from './Follow';
+import { Like } from './Like';
+import { Posts } from './Posts';
 
-@Entity({ schema: 'outstagram', name: 'users' })
+@Index('email', ['email'], { unique: true })
+@Entity('users', { schema: 'react-nodebird' })
 export class Users {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('varchar', {
-    name: 'email',
-    unique: true,
-    length: 30,
-    nullable: false,
-  })
+  @Column('varchar', { name: 'email', unique: true, length: 30 })
   email: string;
 
-  @Column('varchar', { name: 'nickname', length: 20, nullable: false })
+  @Column('varchar', { name: 'nickname', length: 30 })
   nickname: string;
 
-  @Column('varchar', { name: 'password', length: 100, nullable: false })
+  @Column('varchar', { name: 'password', length: 100 })
   password: string;
 
-  @CreateDateColumn()
+  @Column('datetime', { name: 'createdAt' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @Column('datetime', { name: 'updatedAt' })
   updatedAt: Date;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
+  @OneToMany(() => Comments, (comments) => comments.user)
+  comments: Comments[];
 
-  // 사용자와 게시글 1:N
-  @OneToMany(() => Posts, (posts) => posts.UserId)
-  OwnedPostsUser: Posts[];
+  @OneToMany(() => Follow, (follow) => follow.following)
+  follows: Follow[];
 
-  // 사용자와 댓글 1:N
-  @OneToMany(() => Comments, (comments) => comments.UserId)
-  OwnedCommentsUser: Comments[];
+  @OneToMany(() => Follow, (follow) => follow.follower)
+  follows2: Follow[];
 
-  // 좋아요
-  @ManyToMany(() => Posts, (posts) => posts.UsersLikedPosts)
-  @JoinTable({
-    name: 'userLikedPosts',
-    joinColumn: {
-      name: 'UserId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'PostId',
-      referencedColumnName: 'id',
-    },
-  })
-  OwnedLikedPostsUsers: Posts[];
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
 
-  // 팔로우
-  @ManyToMany(() => Followers, (followers) => followers.FollowUsers)
-  @JoinTable({
-    name: 'followUsers',
-    joinColumn: {
-      name: 'UserId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'FollowerId',
-      referencedColumnName: 'id',
-    },
-  })
-  OwnedFollowersUsers: Followers[];
-
-  // 팔로잉
-  @ManyToMany(() => Followings, (followings) => followings.FollowingUsers)
-  @JoinTable({
-    name: 'followingUsers',
-    joinColumn: {
-      name: 'UserId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'FollowingId',
-      referencedColumnName: 'id',
-    },
-  })
-  OwnedFollowingsUsers: Followings[];
+  @OneToMany(() => Posts, (posts) => posts.user)
+  posts: Posts[];
 }

@@ -3,7 +3,7 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthService } from './auth.service';
-import { Users } from 'src/entities/Users';
+import { Users } from '../entities/Users';
 import { LocalStrategy } from './local.strategy';
 import { LocalSerializer } from './local.serializer';
 

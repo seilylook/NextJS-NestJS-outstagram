@@ -1,73 +1,66 @@
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { Comments } from './Comments';
-import { Users } from './Users';
 import { Images } from './Images';
-import { Hashtags } from './Hashtags';
+import { Like } from './Like';
+import { Posthashtag } from './Posthashtag';
+import { Users } from './Users';
 
-@Entity({ schema: 'outstagram', name: 'posts' })
+@Index('UserId', ['userId'], {})
+@Index('RetweetId', ['retweetId'], {})
+@Entity('posts', { schema: 'react-nodebird' })
 export class Posts {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
-  @Column('text', { name: 'content', nullable: false })
+  @Column('text', { name: 'content' })
   content: string;
 
-  @CreateDateColumn()
+  @Column('datetime', { name: 'createdAt' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @Column('datetime', { name: 'updatedAt' })
   updatedAt: Date;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
+  @Column('int', { name: 'UserId', nullable: true })
+  userId: number | null;
 
-  @Column('int', { name: 'UserId' })
-  UserId: number | null;
+  @Column('int', { name: 'RetweetId', nullable: true })
+  retweetId: number | null;
 
-  // 사용자가 작성한 게시글 1:N
-  @ManyToOne(() => Users, (users) => users.id, {
+  @OneToMany(() => Comments, (comments) => comments.post)
+  comments: Comments[];
+
+  @OneToMany(() => Images, (images) => images.post)
+  images: Images[];
+
+  @OneToMany(() => Like, (like) => like.post)
+  likes: Like[];
+
+  @OneToMany(() => Posthashtag, (posthashtag) => posthashtag.post)
+  posthashtags: Posthashtag[];
+
+  @ManyToOne(() => Users, (users) => users.posts, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'PostUserId', referencedColumnName: 'id' })
-  PostUserId: Users;
+  @JoinColumn([{ name: 'UserId', referencedColumnName: 'id' }])
+  user: Users;
 
-  // 게시물에 대한 댓글 1:N
-  @OneToMany(() => Comments, (comments) => comments.PostId)
-  OwnedCommentsPosts: Comments[];
-
-  // 좋아요 누른 게시물 N:N
-  @ManyToMany(() => Users, (users) => users.OwnedLikedPostsUsers)
-  UsersLikedPosts: Users[];
-
-  // 게스글과 사진 1:N
-  @OneToMany(() => Images, (images) => images.PostId)
-  OwnedImagesPosts: Images[];
-
-  // 게시글과 해시태크 N:N
-  @ManyToMany(() => Hashtags, (hashtags) => hashtags.HashtagedPosts)
-  @JoinTable({
-    name: 'hashtagedPosts',
-    joinColumn: {
-      name: 'PostId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'HashtagId',
-      referencedColumnName: 'id',
-    },
+  @ManyToOne(() => Posts, (posts) => posts.posts, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
   })
-  OwnedHashtagsPosts: Hashtags[];
+  @JoinColumn([{ name: 'RetweetId', referencedColumnName: 'id' }])
+  retweet: Posts;
+
+  @OneToMany(() => Posts, (posts) => posts.retweet)
+  posts: Posts[];
 }

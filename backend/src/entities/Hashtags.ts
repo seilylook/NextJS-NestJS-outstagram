@@ -1,15 +1,7 @@
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Posts } from './Posts';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Posthashtag } from './Posthashtag';
 
-@Entity({ schema: 'outstagram', name: 'hashtags' })
+@Entity('hashtags', { schema: 'react-nodebird' })
 export class Hashtags {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
@@ -17,16 +9,12 @@ export class Hashtags {
   @Column('varchar', { name: 'name', length: 20 })
   name: string;
 
-  @CreateDateColumn()
+  @Column('datetime', { name: 'createdAt' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @Column('datetime', { name: 'updatedAt' })
   updatedAt: Date;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
-
-  // 게시글과 해시태그 N:N
-  @ManyToMany(() => Posts, (posts) => posts.OwnedHashtagsPosts)
-  HashtagedPosts: Posts[];
+  @OneToMany(() => Posthashtag, (posthashtag) => posthashtag.hashtag)
+  posthashtags: Posthashtag[];
 }

@@ -1,10 +1,10 @@
 import { Controller, Body, Post, UseGuards, Req, Res } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { User } from 'src/common/decoratos/user.decorator';
-import { NotLoggedInGuard } from 'src/auth/not-logged-in.guard';
-import { LocalAuthGuard } from 'src/auth/local-auth.guard';
-import { LoggedInGuard } from 'src/auth/logged-in.guard';
+import { User } from '../common/decoratos/user.decorator';
+import { NotLoggedInGuard } from '../auth/not-logged-in.guard';
+import { LocalAuthGuard } from '../auth/local-auth.guard';
+import { LoggedInGuard } from '../auth/logged-in.guard';
 
 @ApiTags('USERS')
 @Controller('users')

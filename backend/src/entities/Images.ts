@@ -1,16 +1,15 @@
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { Posts } from './Posts';
 
-@Entity({ schema: 'outstagram', name: 'images' })
+@Index('PostId', ['postId'], {})
+@Entity('images', { schema: 'react-nodebird' })
 export class Images {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
@@ -18,22 +17,19 @@ export class Images {
   @Column('varchar', { name: 'src', length: 200 })
   src: string;
 
-  @CreateDateColumn()
+  @Column('datetime', { name: 'createdAt' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @Column('datetime', { name: 'updatedAt' })
   updatedAt: Date;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
+  @Column('int', { name: 'PostId', nullable: true })
+  postId: number | null;
 
-  @Column('int', { name: 'PostId' })
-  PostId: number | null;
-
-  @ManyToOne(() => Posts, (posts) => posts.id, {
+  @ManyToOne(() => Posts, (posts) => posts.images, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'ImagePostId', referencedColumnName: 'id' })
-  ImagePostId: Posts;
+  @JoinColumn([{ name: 'PostId', referencedColumnName: 'id' }])
+  post: Posts;
 }
