@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { RootReducerState } from "@/reducers";
@@ -19,8 +19,16 @@ const FormWrapper = styled(Form)`
 const LoginForm = () => {
   const [email, onChangeEmail] = useInput("");
   const [password, onChangePassword] = useInput("");
-  const { logInLoading } = useSelector((state: RootReducerState) => state.user);
+  const { logInLoading, logInError } = useSelector(
+    (state: RootReducerState) => state.user
+  );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (logInError) {
+      alert("로그인 정보가 올바르지 않습니다.");
+    }
+  }, [logInError]);
 
   const onSubmitForm = useCallback(() => {
     dispatch({

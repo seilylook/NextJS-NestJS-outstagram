@@ -11,6 +11,7 @@ import { UsersService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from './entities/Users';
 import { Posts } from './entities/Posts';
+import { AuthModule } from './auth/auth.module';
 import * as ormconfig from '../ormconfig';
 
 @Module({
@@ -18,8 +19,9 @@ import * as ormconfig from '../ormconfig';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    PostsModule,
     UsersModule,
+    PostsModule,
+    AuthModule,
     Users,
     Posts,
     TypeOrmModule.forRoot(ormconfig),
