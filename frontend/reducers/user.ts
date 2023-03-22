@@ -59,27 +59,6 @@ export const initialState = {
   me: null,
 };
 
-const dummyUser = (data: any) => ({
-  ...data,
-  id: 1,
-  nickname: "kim",
-  Posts: [
-    {
-      id: 1,
-    },
-  ],
-  Followings: [
-    { nickname: "부기초" },
-    { nickname: "Chanho Lee" },
-    { nickname: "neue zeal" },
-  ],
-  Followers: [
-    { nickname: "부기초" },
-    { nickname: "Chanho Lee" },
-    { nickname: "neue zeal" },
-  ],
-});
-
 export type UserReducerState = typeof initialState;
 
 const reducer = (state: UserReducerState, action: AnyAction) =>

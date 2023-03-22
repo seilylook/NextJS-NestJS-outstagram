@@ -38,6 +38,18 @@ const SignUp = () => {
     }
   }, [me && me.id]);
 
+  useEffect(() => {
+    if (signUpDone) {
+      Router.replace("/");
+    }
+  }, [signUpDone]);
+
+  useEffect(() => {
+    if (signUpError) {
+      alert("잘못된 사용자 정보입니다.");
+    }
+  }, [signUpError]);
+
   const onChangePasswordCheck = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       setPasswordCheck(e.currentTarget.value);

@@ -6,6 +6,7 @@ import {
   UseGuards,
   Req,
   Res,
+  Next,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -50,7 +51,11 @@ export class UsersController {
   @UseGuards(new LoggedInGuard())
   @Post('logout')
   logOut(@Req() req, @Res() res) {
-    req.logOut();
+    req.logOut(function (err) {
+      if (err) {
+        res.send(err);
+      }
+    });
     res.clearCookie('connect.sid', { httpOnly: true });
     res.send('ok');
   }
