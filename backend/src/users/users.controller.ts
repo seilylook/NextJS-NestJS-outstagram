@@ -10,8 +10,8 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { User } from '../common/decoratos/user.decorator';
-import { NotLoggedInGuard } from '../auth/not-logged-in.guard';
 import { LocalAuthGuard } from '../auth/local-auth.guard';
+import { NotLoggedInGuard } from '../auth/not-logged-in.guard';
 import { LoggedInGuard } from '../auth/logged-in.guard';
 
 @ApiTags('USERS')
@@ -29,8 +29,21 @@ export class UsersController {
   @ApiOperation({ summary: '로그인' })
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  logIn(@User() user) {
-    return user;
+  async logIn(@User() user) {
+    const posts = await this.userService.getPosts(user);
+    const followers = await this.userService.getFollowers(user);
+    const followings = await this.userService.getFollowings(user);
+
+    const result = {
+      id: user.id,
+      email: user.email,
+      nickname: user.nickname,
+      Posts: posts.posts,
+      Followings: followings.followings,
+      Followers: followers.followers,
+    };
+
+    return result;
   }
 
   @ApiOperation({ summary: '로그아웃' })

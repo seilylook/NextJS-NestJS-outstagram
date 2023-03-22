@@ -1,12 +1,12 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Comments } from 'src/entities/Comments';
-import { Follow } from 'src/entities/Follow';
-import { Hashtags } from 'src/entities/Hashtags';
-import { Images } from 'src/entities/Images';
-import { Like } from 'src/entities/Like';
-import { Posthashtag } from 'src/entities/Posthashtag';
 import { Posts } from './src/entities/Posts';
 import { Users } from './src/entities/Users';
+import { Comments } from 'src/entities/Comments';
+import { Images } from 'src/entities/Images';
+import { Follow } from 'src/entities/Follow';
+import { Hashtags } from 'src/entities/Hashtags';
+import { Like } from 'src/entities/Like';
+import { Posthashtag } from 'src/entities/Posthashtag';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
