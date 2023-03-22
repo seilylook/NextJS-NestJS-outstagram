@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Repository, DataSource, createQueryBuilder } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { Repository, DataSource } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Users } from '../entities/Users';

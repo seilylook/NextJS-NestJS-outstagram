@@ -26,7 +26,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (logInError) {
-      alert(logInError);
+      alert("잘못된 사용자 정보입니다.");
     }
   }, [logInError]);
 

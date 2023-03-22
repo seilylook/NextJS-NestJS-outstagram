@@ -1,7 +1,8 @@
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useInput from "@/hooks/useInput";
 import Head from "next/head";
+import Router from "next/router";
 import { SIGN_UP_REQUEST } from "@/reducers/user";
 import { RootReducerState } from "@/reducers";
 
@@ -26,11 +27,16 @@ const SignUp = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [term, setTerm] = useState(false);
   const [termError, setTermError] = useState(false);
-  const { signUpLoading } = useSelector(
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector(
     (state: RootReducerState) => state.user
   );
-
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (me && me.id) {
+      Router.replace("/");
+    }
+  }, [me && me.id]);
 
   const onChangePasswordCheck = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
