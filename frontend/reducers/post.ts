@@ -126,7 +126,7 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
       case ADD_POST_SUCCESS:
         draft.addPostLoading = false;
         draft.addPostDone = true;
-        draft.mainPosts.unshift(dummyPost(action.data));
+        draft.mainPosts.unshift(action.data);
         break;
 
       case ADD_POST_FAILURE:

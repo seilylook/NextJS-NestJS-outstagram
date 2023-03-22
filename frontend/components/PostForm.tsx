@@ -21,11 +21,17 @@ const PostForm = () => {
   }, [addPostDone, setText]);
 
   const onSubmit = useCallback(() => {
+    if (!text || !text.trim()) {
+      return alert("게시물을 작성하세요.");
+    }
     dispatch({
       type: ADD_POST_REQUEST,
-      data: text,
+      data: {
+        content: text,
+        image: imagePaths,
+      },
     });
-  }, [dispatch, text]);
+  }, [dispatch, text, imagePaths]);
 
   const onClickImageUpload = useCallback(() => {
     imageInput.current?.click();
