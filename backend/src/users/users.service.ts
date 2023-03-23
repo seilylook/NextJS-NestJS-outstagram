@@ -4,18 +4,12 @@ import { Repository, DataSource } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Users } from '../entities/Users';
-import { Posts } from '../entities/Posts';
-import { Follow } from '../entities/Follow';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(Users)
     private userRepository: Repository<Users>,
-    @InjectRepository(Posts)
-    private postRepository: Repository<Posts>,
-    @InjectRepository(Follow)
-    private followerRepository: Repository<Follow>,
     private dataSource: DataSource,
   ) {}
 

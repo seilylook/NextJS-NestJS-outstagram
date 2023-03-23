@@ -23,21 +23,25 @@ export class PostsController {
   // },
   // Images: [],
   // Comments: [],
+
+  @Get('/')
+  async loadAllPosts() {
+    const result = await this.postsService.loadAllPosts();
+  }
+
   @Post('/')
-  addPost(@User() user, @Body() body) {
-    console.log('유저데이터', user);
-    console.log('게시물데이터', body);
+  async addPost(@User() user, @Body() body) {
+    // console.log('글내용', body.content);
+    // const result = {
+    //   content: body.content,
+    //   User: {
+    //     id: user.id,
+    //     nickname: user.nickname,
+    //   },
+    //   Images: body.image,
+    //   Comments: [],
+    // };
 
-    const result = {
-      content: body.content,
-      User: {
-        id: user.id,
-        nickname: user.nickname,
-      },
-      Images: body.image,
-      Comments: [],
-    };
-
-    console.log(result);
+    await this.postsService.addPost(user.id, body);
   }
 }
