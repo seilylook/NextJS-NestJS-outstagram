@@ -6,6 +6,41 @@ import { Users } from '../entities/Users';
 import { Posts } from '../entities/Posts';
 import { User } from '../common/decoratos/user.decorator';
 
+// --- mainPosts---
+// mainPosts: [
+//   {
+//     id: 1,
+//     User: {
+//       id: 1,
+//       nickname: "kim",
+//     },
+//     content: "첫 번째 게시글. #Next #Nest",
+//     Images: [
+//       {
+//         src: "https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3082832__340.jpg",
+//       },
+//     ],
+//     Comments: [
+//       {
+//         id: 1,
+//         User: {
+//           id: 2,
+//           nickname: "lee",
+//         },
+//         content: "첫 댓글이다",
+//       },
+//       {
+//         id: 2,
+//         User: {
+//           id: 3,
+//           nickname: "park",
+//         },
+//         content: "두번째 댓글이다.",
+//       },
+//     ],
+//   },
+// ],
+
 @Injectable()
 export class PostsService {
   constructor(
@@ -22,9 +57,21 @@ export class PostsService {
     const allPosts = await queryRunner.manager
       .getRepository(Posts)
       .createQueryBuilder('posts')
+      .leftJoinAndSelect('posts.comments', 'comments')
+      .leftJoinAndSelect('posts.images', 'images')
+      .leftJoinAndSelect('posts.User', 'User')
+      .select([
+        'posts.id',
+        'posts.content',
+        'User.id',
+        'User.nickname',
+        'comments',
+        'images',
+      ])
+      .orderBy('posts.createdAt', 'DESC')
       .getMany();
 
-    console.log(allPosts);
+    return allPosts;
   }
 
   async addPost(userId: number, postData) {

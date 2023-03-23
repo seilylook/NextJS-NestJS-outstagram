@@ -58,7 +58,7 @@ export class Posts {
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'UserId', referencedColumnName: 'id' }])
-  user: Users;
+  User: Users;
 
   @ManyToOne(() => Posts, (posts) => posts.posts, {
     onDelete: 'SET NULL',

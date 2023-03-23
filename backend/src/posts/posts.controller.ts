@@ -57,22 +57,12 @@ export class PostsController {
 
   @Get('/')
   async loadAllPosts() {
-    const result = await this.postsService.loadAllPosts();
+    const posts = await this.postsService.loadAllPosts();
+    return posts;
   }
 
   @Post('/')
   async addPost(@User() user, @Body() body) {
-    // console.log('글내용', body.content);
-    // const result = {
-    //   content: body.content,
-    //   User: {
-    //     id: user.id,
-    //     nickname: user.nickname,
-    //   },
-    //   Images: body.image,
-    //   Comments: [],
-    // };
-
     await this.postsService.addPost(user.id, body);
   }
 }
