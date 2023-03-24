@@ -1,4 +1,12 @@
-import { Controller, Body, Post, UseGuards, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Post,
+  UseGuards,
+  Req,
+  Res,
+  Get,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { User } from '../common/decoratos/user.decorator';
@@ -11,6 +19,12 @@ import { LoggedInGuard } from '../auth/logged-in.guard';
 export class UsersController {
   constructor(private userService: UsersService) {}
 
+  // 여기 수정해야 된다.
+  // @Get('/')
+  // async getUserInfo(@User() user) {
+  //   return this.userService.getUserInfo(user)
+  // }
+
   @UseGuards(new NotLoggedInGuard())
   @ApiOperation({ summary: '회원가입' })
   @Post('signup')
@@ -22,20 +36,7 @@ export class UsersController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async logIn(@User() user) {
-    const posts = await this.userService.getPosts(user);
-    const followers = await this.userService.getFollowers(user);
-    const followings = await this.userService.getFollowings(user);
-
-    const result = {
-      id: user.id,
-      email: user.email,
-      nickname: user.nickname,
-      Posts: posts.posts,
-      Followings: followings.followings,
-      Followers: followers.followers,
-    };
-
-    return result;
+    return this.userService.login(user);
   }
 
   @ApiOperation({ summary: '로그아웃' })

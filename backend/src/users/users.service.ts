@@ -13,34 +13,40 @@ export class UsersService {
     private dataSource: DataSource,
   ) {}
 
-  async getPosts(user: Users) {
-    const posts = await this.userRepository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.posts', 'posts')
-      .where('user.id = :id', { id: user.id })
-      .getOne();
+  async login(User: Users) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    return posts;
-  }
+    try {
+      const user = await queryRunner.manager
+        .getRepository(Users)
+        .createQueryBuilder('users')
+        .leftJoinAndSelect('users.Posts', 'Posts')
+        .leftJoinAndSelect('users.Comments', 'Comments')
+        .leftJoinAndSelect('users.Followings', 'Followings')
+        .leftJoinAndSelect('users.Followers', 'Followers')
+        .leftJoinAndSelect('users.Likes', 'Likes')
+        .where('users.id = :id', { id: User.id })
+        .select([
+          'users.id',
+          'users.email',
+          'users.nickname',
+          'Posts',
+          'Comments',
+          'Followers',
+          'Followings',
+          'Likes',
+        ])
+        .getOne();
 
-  async getFollowers(user: Users) {
-    const followers = await this.userRepository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.followers', 'followers')
-      .where('user.id = :id', { id: user.id })
-      .getOne();
-
-    return followers;
-  }
-
-  async getFollowings(user: Users) {
-    const followings = await this.userRepository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.followings', 'followings')
-      .where('user.id = :id', { id: user.id })
-      .getOne();
-
-    return followings;
+      await queryRunner.commitTransaction();
+      return user;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async signUp(email: string, nickname: string, password: string) {

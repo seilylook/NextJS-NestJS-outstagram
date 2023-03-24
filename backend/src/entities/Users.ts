@@ -38,17 +38,17 @@ export class Users {
   deletedAt: Date;
 
   @OneToMany(() => Comments, (comments) => comments.User)
-  comments: Comments[];
+  Comments: Comments[];
 
   @OneToMany(() => Follow, (follow) => follow.following)
-  followers: Follow[];
+  Followers: Follow[];
 
   @OneToMany(() => Follow, (follow) => follow.follower)
-  followings: Follow[];
+  Followings: Follow[];
 
   @OneToMany(() => Like, (like) => like.user)
-  likes: Like[];
+  Likes: Like[];
 
   @OneToMany(() => Posts, (posts) => posts.User)
-  posts: Posts[];
+  Posts: Posts[];
 }

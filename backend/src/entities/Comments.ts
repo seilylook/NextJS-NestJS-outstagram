@@ -37,7 +37,7 @@ export class Comments {
   @Column('int', { name: 'PostId', nullable: true })
   postId: number | null;
 
-  @ManyToOne(() => Users, (users) => users.comments, {
+  @ManyToOne(() => Users, (users) => users.Comments, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })

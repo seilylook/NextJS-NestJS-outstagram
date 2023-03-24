@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { RootReducerState } from "@/reducers";
 import { useDispatch } from "react-redux";
 import { LOAD_POSTS_REQUEST } from "@/reducers/post";
+import { LOAD_USER_INFO_REQUEST } from "@/reducers/user";
 
 import Head from "next/head";
 
@@ -18,6 +19,9 @@ const Home = () => {
   );
 
   useEffect(() => {
+    // dispatch({
+    //   type: LOAD_USER_INFO_REQUEST,
+    // });
     dispatch({
       type: LOAD_POSTS_REQUEST,
     });

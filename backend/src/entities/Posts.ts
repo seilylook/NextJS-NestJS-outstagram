@@ -53,7 +53,7 @@ export class Posts {
   @OneToMany(() => Posthashtag, (posthashtag) => posthashtag.post)
   Posthashtags: Posthashtag[];
 
-  @ManyToOne(() => Users, (users) => users.posts, {
+  @ManyToOne(() => Users, (users) => users.Posts, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
