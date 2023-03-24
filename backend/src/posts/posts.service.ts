@@ -74,7 +74,7 @@ export class PostsService {
     return allPosts;
   }
 
-  async addPost(userId: number, postData) {
+  async addPost(user: Users, postData) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -82,13 +82,31 @@ export class PostsService {
     // console.log(post);
 
     try {
-      const result = await queryRunner.manager.getRepository(Posts).save({
-        userId,
+      await queryRunner.manager.getRepository(Posts).save({
+        userId: user.id,
         content: postData.content,
       });
 
+      const newPost = await queryRunner.manager
+        .getRepository(Posts)
+        .createQueryBuilder('posts')
+        .leftJoinAndSelect('posts.comments', 'comments')
+        .leftJoinAndSelect('posts.images', 'images')
+        .leftJoinAndSelect('posts.User', 'user')
+        .where('posts.userId = :id', { id: user.id })
+        .select([
+          'posts.id',
+          'posts.content',
+          'user.id',
+          'user.nickname',
+          'comments',
+          'images',
+        ])
+        .orderBy('posts.createdAt', 'DESC')
+        .getOne();
+
       await queryRunner.commitTransaction();
-      return true;
+      return newPost;
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {

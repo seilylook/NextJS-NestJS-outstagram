@@ -57,12 +57,11 @@ export class PostsController {
 
   @Get('/')
   async loadAllPosts() {
-    const posts = await this.postsService.loadAllPosts();
-    return posts;
+    return await this.postsService.loadAllPosts();
   }
 
   @Post('/')
   async addPost(@User() user, @Body() body) {
-    await this.postsService.addPost(user.id, body);
+    return await this.postsService.addPost(user, body);
   }
 }
