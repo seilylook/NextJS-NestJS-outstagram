@@ -102,7 +102,7 @@ const PostCard = ({ post }: PostProp) => {
       </Card>
       {commentFormOpened && (
         <div>
-          <CommentForm post={post} />
+          {me && <CommentForm post={post} />}
           <List
             header={`${post.Comments.length}개의 댓글`}
             itemLayout="horizontal"
