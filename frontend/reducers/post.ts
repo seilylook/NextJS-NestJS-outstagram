@@ -54,48 +54,6 @@ export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
 export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS";
 export const LOAD_POSTS_FAILURE = "LOAD_POSTS_FAILURE";
 
-export const generateDummyPost = (num: number) =>
-  Array(num)
-    .fill(num)
-    .map(() => ({
-      id: shortId.generate(),
-      User: {
-        id: shortId.generate(),
-        nickname: fakerStatic.name.findName(),
-      },
-      content: fakerStatic.lorem.paragraph(),
-      Images: [{}],
-      Comments: [
-        {
-          User: {
-            id: shortId.generate(),
-            nickname: fakerStatic.name.findName(),
-          },
-          content: fakerStatic.lorem.sentence(),
-        },
-      ],
-    }));
-
-const dummyPost = (data: any) => ({
-  id: data.id,
-  content: data.content,
-  User: {
-    id: 1,
-    nickname: "kim",
-  },
-  Images: [],
-  Comments: [],
-});
-
-const dummyComment = (data: any) => ({
-  id: shortId.generate(),
-  content: data,
-  User: {
-    id: 1,
-    nickname: "lee",
-  },
-});
-
 const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
   produce(state, (draft) => {
     switch (action.type) {
@@ -162,7 +120,8 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
         draft.addCommentDone = true;
         const post = draft.mainPosts.find((v) => v.id === action.data.postId);
         // 서버에서 들어오는 id는 number가 될 거다.
-        post?.Comments.unshift(dummyComment(action.data.content));
+        console.log(action.data);
+        post?.Comments.unshift(action.data);
         break;
 
       case ADD_COMMENT_FAILURE:

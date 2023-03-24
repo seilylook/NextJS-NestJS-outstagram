@@ -29,14 +29,14 @@ export class Posthashtag {
   @Column('int', { primary: true, name: 'PostId' })
   postId: number;
 
-  @ManyToOne(() => Hashtags, (hashtags) => hashtags.posthashtags, {
+  @ManyToOne(() => Hashtags, (hashtags) => hashtags.Posthashtags, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'HashtagId', referencedColumnName: 'id' }])
-  hashtag: Hashtags;
+  Hashtag: Hashtags;
 
-  @ManyToOne(() => Posts, (posts) => posts.posthashtags, {
+  @ManyToOne(() => Posts, (posts) => posts.Posthashtags, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })

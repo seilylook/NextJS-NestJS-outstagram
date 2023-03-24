@@ -37,7 +37,7 @@ export class Users {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => Comments, (comments) => comments.user)
+  @OneToMany(() => Comments, (comments) => comments.User)
   comments: Comments[];
 
   @OneToMany(() => Follow, (follow) => follow.following)

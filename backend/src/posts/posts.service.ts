@@ -4,7 +4,7 @@ import { Repository, DataSource } from 'typeorm';
 
 import { Users } from '../entities/Users';
 import { Posts } from '../entities/Posts';
-import { User } from '../common/decoratos/user.decorator';
+import { Comments } from '../entities/Comments';
 
 // --- mainPosts---
 // mainPosts: [
@@ -54,24 +54,39 @@ export class PostsService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
-    const allPosts = await queryRunner.manager
-      .getRepository(Posts)
-      .createQueryBuilder('posts')
-      .leftJoinAndSelect('posts.comments', 'comments')
-      .leftJoinAndSelect('posts.images', 'images')
-      .leftJoinAndSelect('posts.User', 'User')
-      .select([
-        'posts.id',
-        'posts.content',
-        'User.id',
-        'User.nickname',
-        'comments',
-        'images',
-      ])
-      .orderBy('posts.createdAt', 'DESC')
-      .getMany();
+    try {
+      const allPosts = await queryRunner.manager
+        .getRepository(Posts)
+        .createQueryBuilder('posts')
+        .leftJoinAndSelect('posts.Images', 'Images')
+        .leftJoinAndSelect('posts.User', 'User')
+        .leftJoinAndSelect('posts.Likes', 'Likes')
+        .leftJoinAndSelect('posts.Posthashtags', 'Posthashtags')
+        .leftJoinAndSelect('posts.Retweet', 'Retweet')
+        .leftJoinAndSelect('posts.Comments', 'Comments')
+        .select([
+          'posts.id',
+          'posts.content',
+          'User.id',
+          'User.nickname',
+          'Images',
+          'Likes',
+          'Posthashtags',
+          'Retweet',
+          'Comments.id',
+          'Comments.userId',
+        ])
+        .orderBy('posts.createdAt', 'DESC')
+        .getMany();
 
-    return allPosts;
+      await queryRunner.commitTransaction();
+      console.log(allPosts);
+      return allPosts;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async addPost(user: Users, postData) {
@@ -90,8 +105,8 @@ export class PostsService {
       const newPost = await queryRunner.manager
         .getRepository(Posts)
         .createQueryBuilder('posts')
-        .leftJoinAndSelect('posts.comments', 'comments')
-        .leftJoinAndSelect('posts.images', 'images')
+        .leftJoinAndSelect('posts.Comments', 'Comments')
+        .leftJoinAndSelect('posts.Images', 'Images')
         .leftJoinAndSelect('posts.User', 'user')
         .where('posts.userId = :id', { id: user.id })
         .select([
@@ -99,14 +114,54 @@ export class PostsService {
           'posts.content',
           'user.id',
           'user.nickname',
-          'comments',
-          'images',
+          'Comments',
+          'Images',
         ])
         .orderBy('posts.createdAt', 'DESC')
         .getOne();
 
       await queryRunner.commitTransaction();
       return newPost;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async addComment(user: Users, commentData) {
+    // console.log('사용자 정보', user);
+    // console.log('댓글 내용', commentData);
+    // 사용자 정보 Users { id: 1, email: 'kim@kim.com', nickname: 'kim' }
+    // 댓글 내용 { content: '123', userId: 1, postId: 1 }
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      await queryRunner.manager.getRepository(Comments).save({
+        content: commentData.content,
+        userId: commentData.userId,
+        postId: commentData.postId,
+      });
+
+      const newComment = await queryRunner.manager
+        .getRepository(Comments)
+        .createQueryBuilder('Comment')
+        .leftJoinAndSelect('Comment.User', 'User')
+        .where('Comment.userId = :id', { id: user.id })
+        .select([
+          'Comment.id',
+          'Comment.content',
+          'User.id',
+          'User.nickname',
+          'Comment.postId',
+        ])
+        .orderBy('Comment.createdAt', 'DESC')
+        .getOne();
+
+      await queryRunner.commitTransaction();
+      return newComment;
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {

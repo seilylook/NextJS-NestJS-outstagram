@@ -42,16 +42,16 @@ export class Posts {
   retweetId: number | null;
 
   @OneToMany(() => Comments, (comments) => comments.post)
-  comments: Comments[];
+  Comments: Comments[];
 
   @OneToMany(() => Images, (images) => images.post)
-  images: Images[];
+  Images: Images[];
 
   @OneToMany(() => Like, (like) => like.post)
-  likes: Like[];
+  Likes: Like[];
 
   @OneToMany(() => Posthashtag, (posthashtag) => posthashtag.post)
-  posthashtags: Posthashtag[];
+  Posthashtags: Posthashtag[];
 
   @ManyToOne(() => Users, (users) => users.posts, {
     onDelete: 'SET NULL',
@@ -60,13 +60,13 @@ export class Posts {
   @JoinColumn([{ name: 'UserId', referencedColumnName: 'id' }])
   User: Users;
 
-  @ManyToOne(() => Posts, (posts) => posts.posts, {
+  @ManyToOne(() => Posts, (posts) => posts.Posts, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'RetweetId', referencedColumnName: 'id' }])
-  retweet: Posts;
+  Retweet: Posts;
 
-  @OneToMany(() => Posts, (posts) => posts.retweet)
-  posts: Posts[];
+  @OneToMany(() => Posts, (posts) => posts.Retweet)
+  Posts: Posts[];
 }

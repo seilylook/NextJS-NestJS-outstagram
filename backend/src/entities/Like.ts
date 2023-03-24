@@ -29,7 +29,7 @@ export class Like {
   @Column('int', { primary: true, name: 'UserId' })
   userId: number;
 
-  @ManyToOne(() => Posts, (posts) => posts.likes, {
+  @ManyToOne(() => Posts, (posts) => posts.Likes, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })

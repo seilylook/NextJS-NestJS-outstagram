@@ -32,7 +32,7 @@ export class Images {
   @Column('int', { name: 'PostId', nullable: true })
   postId: number | null;
 
-  @ManyToOne(() => Posts, (posts) => posts.images, {
+  @ManyToOne(() => Posts, (posts) => posts.Images, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })

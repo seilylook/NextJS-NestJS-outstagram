@@ -42,9 +42,9 @@ export class Comments {
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'UserId', referencedColumnName: 'id' }])
-  user: Users;
+  User: Users;
 
-  @ManyToOne(() => Posts, (posts) => posts.comments, {
+  @ManyToOne(() => Posts, (posts) => posts.Comments, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
