@@ -140,6 +140,14 @@ export class PostsService {
     await queryRunner.startTransaction();
 
     try {
+      const post = await queryRunner.manager.getRepository(Posts).find({
+        where: { id: commentData.postId },
+      });
+
+      if (!post) {
+        return null;
+      }
+
       await queryRunner.manager.getRepository(Comments).save({
         content: commentData.content,
         userId: commentData.userId,
