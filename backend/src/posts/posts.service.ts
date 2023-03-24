@@ -64,6 +64,7 @@ export class PostsService {
         .leftJoinAndSelect('posts.Posthashtags', 'Posthashtags')
         .leftJoinAndSelect('posts.Retweet', 'Retweet')
         .leftJoinAndSelect('posts.Comments', 'Comments')
+        .leftJoinAndSelect('Comments.User', 'commentsUser')
         .select([
           'posts.id',
           'posts.content',
@@ -73,14 +74,14 @@ export class PostsService {
           'Likes',
           'Posthashtags',
           'Retweet',
-          'Comments.id',
-          'Comments.userId',
+          'Comments',
+          'commentsUser.id',
+          'commentsUser.nickname',
         ])
         .orderBy('posts.createdAt', 'DESC')
         .getMany();
 
       await queryRunner.commitTransaction();
-      console.log(allPosts);
       return allPosts;
     } catch (error) {
       await queryRunner.rollbackTransaction();
