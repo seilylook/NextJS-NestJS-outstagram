@@ -72,13 +72,15 @@ export class PostsService {
           'User.id',
           'User.nickname',
           'Images',
-          'Likes',
+          'Likes.userId',
+          'Likes.postId',
           'Posthashtags',
           'Retweet',
           'Comments',
           'commentsUser.id',
           'commentsUser.nickname',
         ])
+        .addSelect('Likes.userId')
         .orderBy('posts.createdAt', 'DESC')
         .addOrderBy('Comments.createdAt', 'DESC')
         .getMany();
@@ -196,16 +198,13 @@ export class PostsService {
         return null;
       }
 
-      await queryRunner.manager.getRepository(Like).save({
+      const like = await queryRunner.manager.getRepository(Like).save({
         userId: user.id,
         postId: postId,
       });
 
       await queryRunner.commitTransaction();
-      return {
-        postId: post.id,
-        userId: user.id,
-      };
+      return like;
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {
@@ -229,6 +228,12 @@ export class PostsService {
         return null;
       }
 
+      const like = await queryRunner.manager
+        .getRepository(Like)
+        .createQueryBuilder('Like')
+        .where('Like.postId = :id', { id: postId })
+        .getOne();
+
       await queryRunner.manager
         .getRepository(Like)
         .createQueryBuilder('Like')
@@ -238,10 +243,7 @@ export class PostsService {
         .execute();
 
       await queryRunner.commitTransaction();
-      return {
-        postId: post.id,
-        userId: user.id,
-      };
+      return like;
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {

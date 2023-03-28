@@ -158,8 +158,9 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
       case LIKE_POST_SUCCESS: {
         draft.likePostLoading = false;
         draft.likePostDone = true;
+        console.log(action.data);
         const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-        post.Likes.push({ id: action.data.userId });
+        post.Likes.push(action.data);
         break;
       }
 
@@ -177,8 +178,9 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
       case UNLIKE_POST_SUCCESS: {
         draft.unlikePostLoading = false;
         draft.unlikePostDone = true;
+        console.log(action.data);
         const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-        post.Likes = post.Likes.filter((v) => v.id !== action.data.userId);
+        post.Likes = post.Likes.filter((v) => v.userId !== action.data.userId);
         break;
       }
 

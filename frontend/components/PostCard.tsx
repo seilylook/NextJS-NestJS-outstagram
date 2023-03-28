@@ -30,10 +30,10 @@ type PostProp = {
 const PostCard = ({ post }: PostProp) => {
   const { me } = useSelector((state: RootReducerState) => state.user);
   const id = me?.id;
-  const { removePostLoading, removePostDone } = useSelector(
+  const { removePostLoading } = useSelector(
     (state: RootReducerState) => state.post
   );
-  const liked = post.Likes.find((v) => v.id === id);
+  const liked = post.Likes.find((v) => v.userId === id);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const dispatch = useDispatch();
 
