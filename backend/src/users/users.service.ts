@@ -13,6 +13,42 @@ export class UsersService {
     private dataSource: DataSource,
   ) {}
 
+  async getUserInfo(User: Users) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const user = await queryRunner.manager
+        .getRepository(Users)
+        .createQueryBuilder('users')
+        .leftJoinAndSelect('users.Posts', 'Posts')
+        .leftJoinAndSelect('users.Comments', 'Comments')
+        .leftJoinAndSelect('users.Followings', 'Followings')
+        .leftJoinAndSelect('users.Followers', 'Followers')
+        .leftJoinAndSelect('users.Likes', 'Likes')
+        .where('users.id = :id', { id: User.id })
+        .select([
+          'users.id',
+          'users.email',
+          'users.nickname',
+          'Posts',
+          'Comments',
+          'Followers',
+          'Followings',
+          'Likes',
+        ])
+        .getOne();
+
+      await queryRunner.commitTransaction();
+      return user;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
   async login(User: Users) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
