@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootReducerState } from "@/reducers";
-import { REMOVE_POST_REQUEST } from "@/reducers/post";
+import {
+  REMOVE_POST_REQUEST,
+  LIKE_POST_REQUEST,
+  UNLIKE_POST_REQUEST,
+} from "@/reducers/post";
 
 import { PostType } from "@/types/PostType";
 import { CommentType } from "@/types/CommentType";
@@ -29,24 +33,43 @@ const PostCard = ({ post }: PostProp) => {
   const { removePostLoading, removePostDone } = useSelector(
     (state: RootReducerState) => state.post
   );
-  const [liked, setLiked] = useState(false);
+  const liked = post.Likes.find((v) => v.id === id);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const dispatch = useDispatch();
 
-  const onToggleLike = useCallback(() => {
-    setLiked((prev) => !prev);
-  }, []);
+  const onLike = useCallback(() => {
+    if (!id) {
+      return alert("로그인이 필요합니다.");
+    }
+    dispatch({
+      type: LIKE_POST_REQUEST,
+      data: post.id,
+    });
+  }, [dispatch, post.id, id]);
+
+  const onUnLike = useCallback(() => {
+    if (!id) {
+      return alert("로그인이 필요합니다.");
+    }
+    dispatch({
+      type: UNLIKE_POST_REQUEST,
+      data: post.id,
+    });
+  }, [dispatch, post.id, id]);
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
   }, []);
 
   const onRemovePost = useCallback(() => {
+    if (!id) {
+      return alert("로그인이 필요합니다.");
+    }
     dispatch({
       type: REMOVE_POST_REQUEST,
       data: post.id,
     });
-  }, [dispatch, post.id]);
+  }, [dispatch, post.id, id]);
 
   return (
     <div style={{ marginBottom: "20px" }}>
@@ -60,10 +83,10 @@ const PostCard = ({ post }: PostProp) => {
             <HeartTwoTone
               twoToneColor="#eb2f96"
               key="heart"
-              onClick={onToggleLike}
+              onClick={onUnLike}
             />
           ) : (
-            <HeartOutlined key="heart" onClick={onToggleLike} />
+            <HeartOutlined key="heart" onClick={onLike} />
           ),
           <MessageOutlined key="message" onClick={onToggleComment} />,
           <Popover

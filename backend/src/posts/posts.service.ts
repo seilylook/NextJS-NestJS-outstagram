@@ -5,6 +5,7 @@ import { Repository, DataSource } from 'typeorm';
 import { Users } from '../entities/Users';
 import { Posts } from '../entities/Posts';
 import { Comments } from '../entities/Comments';
+import { Like } from '../entities/Like';
 
 // --- mainPosts---
 // mainPosts: [
@@ -172,6 +173,75 @@ export class PostsService {
 
       await queryRunner.commitTransaction();
       return newComment;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async like(postId, user) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const post = await queryRunner.manager
+        .getRepository(Posts)
+        .createQueryBuilder('Post')
+        .where('Post.id = :id', { id: postId })
+        .getOne();
+
+      if (!post) {
+        return null;
+      }
+
+      await queryRunner.manager.getRepository(Like).save({
+        userId: user.id,
+        postId: postId,
+      });
+
+      await queryRunner.commitTransaction();
+      return {
+        postId: post.id,
+        userId: user.id,
+      };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async unlike(postId, user) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const post = await queryRunner.manager
+        .getRepository(Posts)
+        .createQueryBuilder('Post')
+        .where('Post.id = :id', { id: postId })
+        .getOne();
+
+      if (!post) {
+        return null;
+      }
+
+      await queryRunner.manager
+        .getRepository(Like)
+        .createQueryBuilder('Like')
+        .delete()
+        .from(Like)
+        .where('Like.postId = :id', { id: postId })
+        .execute();
+
+      await queryRunner.commitTransaction();
+      return {
+        postId: post.id,
+        userId: user.id,
+      };
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {

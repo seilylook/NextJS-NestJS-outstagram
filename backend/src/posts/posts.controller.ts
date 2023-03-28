@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Patch,
+  Delete,
+} from '@nestjs/common';
 import { User } from '../common/decoratos/user.decorator';
 import { PostsService } from './posts.service';
 
@@ -62,5 +70,17 @@ export class PostsController {
   @Post(':id/comment')
   async addComment(@Param('id') id: number, @User() user, @Body() body) {
     return await this.postsService.addComment(user, body);
+  }
+
+  @Patch(':id/like')
+  async like(@Param('id') id: number, @User() user) {
+    // console.log('사용자정보', user);
+    // console.log('게시글 정보', id);
+    return await this.postsService.like(id, user);
+  }
+
+  @Delete(':id/like')
+  async unlike(@Param('id') id: number, @User() user) {
+    return await this.postsService.unlike(id, user);
   }
 }
