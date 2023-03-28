@@ -79,6 +79,7 @@ export class PostsService {
           'commentsUser.nickname',
         ])
         .orderBy('posts.createdAt', 'DESC')
+        .addOrderBy('Comments.createdAt', 'DESC')
         .getMany();
 
       await queryRunner.commitTransaction();
