@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 
@@ -80,7 +80,6 @@ export class PostsService {
           'commentsUser.id',
           'commentsUser.nickname',
         ])
-        .addSelect('Likes.userId')
         .orderBy('posts.createdAt', 'DESC')
         .addOrderBy('Comments.createdAt', 'DESC')
         .getMany();
@@ -113,12 +112,14 @@ export class PostsService {
         .leftJoinAndSelect('posts.Comments', 'Comments')
         .leftJoinAndSelect('posts.Images', 'Images')
         .leftJoinAndSelect('posts.User', 'user')
+        .leftJoinAndSelect('posts.Likes', 'Likes')
         .where('posts.userId = :id', { id: user.id })
         .select([
           'posts.id',
           'posts.content',
           'user.id',
           'user.nickname',
+          'Likes',
           'Comments',
           'Images',
         ])
@@ -127,6 +128,56 @@ export class PostsService {
 
       await queryRunner.commitTransaction();
       return newPost;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async removePost(postId) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    // console.log('저장할 데이터');
+    // console.log(post);
+
+    try {
+      const post = await queryRunner.manager
+        .getRepository(Posts)
+        .createQueryBuilder('Post')
+        .where('Post.id = :id', { id: postId })
+        .select(['Post.id'])
+        .getOne();
+
+      if (!post) {
+        return null;
+      }
+
+      // const result = await queryRunner.manager
+      //   .getRepository(Posts)
+      //   .createQueryBuilder('Post')
+      //   .delete()
+      //   .from(Posts)
+      //   .where('id = :id', { id: postId })
+      //   .execute();
+
+      const result = await queryRunner.manager
+        .getRepository(Posts)
+        .createQueryBuilder('Post')
+        .leftJoinAndSelect('Post.Images', 'Images')
+        .leftJoinAndSelect('Post.User', 'User')
+        .leftJoinAndSelect('Post.Likes', 'Likes')
+        .leftJoinAndSelect('Post.Posthashtags', 'Posthashtags')
+        .leftJoinAndSelect('Post.Retweet', 'Retweet')
+        .leftJoinAndSelect('Post.Comments', 'Comments')
+        .delete()
+        .from(Posts)
+        .where('id = :id', { id: postId })
+        .execute();
+
+      await queryRunner.commitTransaction();
+      return post;
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {

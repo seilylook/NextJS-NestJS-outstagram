@@ -121,7 +121,9 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
       case REMOVE_POST_SUCCESS:
         draft.removePostLoading = false;
         draft.removePostDone = true;
-        draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data);
+        draft.mainPosts = draft.mainPosts.filter(
+          (v) => v.id !== action.data.id
+        );
         break;
 
       case REMOVE_POST_FAILURE:
@@ -140,7 +142,6 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
         draft.addCommentDone = true;
         const post = draft.mainPosts.find((v) => v.id === action.data.postId);
         // 서버에서 들어오는 id는 number가 될 거다.
-        console.log(action.data);
         post?.Comments.unshift(action.data);
         break;
 
@@ -158,7 +159,6 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
       case LIKE_POST_SUCCESS: {
         draft.likePostLoading = false;
         draft.likePostDone = true;
-        console.log(action.data);
         const post = draft.mainPosts.find((v) => v.id === action.data.postId);
         post.Likes.push(action.data);
         break;
@@ -178,7 +178,6 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
       case UNLIKE_POST_SUCCESS: {
         draft.unlikePostLoading = false;
         draft.unlikePostDone = true;
-        console.log(action.data);
         const post = draft.mainPosts.find((v) => v.id === action.data.postId);
         post.Likes = post.Likes.filter((v) => v.userId !== action.data.userId);
         break;

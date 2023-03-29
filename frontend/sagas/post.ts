@@ -99,20 +99,20 @@ function* addComment(action) {
 }
 
 function removePostAPI(data) {
-  return axios.delete(`/posts/${data.postId}`, data);
+  return axios.delete(`/posts/${data}`);
 }
 
 function* removePost(action) {
   try {
-    // const result = yield call(addPostAPI, action.data)
-    yield delay(1000);
+    const result = yield call(removePostAPI, action.data);
+    console.log(result.data);
     yield put({
       type: REMOVE_POST_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
     yield put({
       type: REMOVE_POST_OF_ME,
-      data: action.data,
+      data: result.data,
     });
   } catch (err) {
     console.error(err);
@@ -130,7 +130,6 @@ function likePostAPI(data) {
 function* likePost(action) {
   try {
     const result = yield call(likePostAPI, action.data);
-
     yield put({
       type: LIKE_POST_SUCCESS,
       data: result.data,

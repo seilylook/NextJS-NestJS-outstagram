@@ -160,7 +160,7 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
         break;
 
       case REMOVE_POST_OF_ME:
-        draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);
+        draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data.id);
         break;
 
       case FOLLOW_REQUEST:

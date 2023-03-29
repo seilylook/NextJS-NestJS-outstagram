@@ -66,19 +66,25 @@ export class PostsController {
     return await this.postsService.addPost(user, body);
   }
 
+  // 게시글 삭제
+  @Delete(':id')
+  async removePost(@Param('id') id: number) {
+    return await this.postsService.removePost(id);
+  }
+
   // 댓글 작성
   @Post(':id/comment')
   async addComment(@Param('id') id: number, @User() user, @Body() body) {
     return await this.postsService.addComment(user, body);
   }
 
+  // 좋아요
   @Patch(':id/like')
   async like(@Param('id') id: number, @User() user) {
-    // console.log('사용자정보', user);
-    // console.log('게시글 정보', id);
     return await this.postsService.like(id, user);
   }
 
+  // 좋아요 취소
   @Delete(':id/like')
   async unlike(@Param('id') id: number, @User() user) {
     return await this.postsService.unlike(id, user);
