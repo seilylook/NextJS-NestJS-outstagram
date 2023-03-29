@@ -20,13 +20,15 @@ export class UsersController {
   constructor(private userService: UsersService) {}
 
   // 여기 수정해야 된다.
+  @ApiOperation({ summary: '로그인 유지' })
+  @UseGuards(LocalAuthGuard)
   @Get('/')
   async getUserInfo(@User() user) {
     return this.userService.getUserInfo(user);
   }
 
-  @UseGuards(new NotLoggedInGuard())
   @ApiOperation({ summary: '회원가입' })
+  @UseGuards(new NotLoggedInGuard())
   @Post('signup')
   async signUp(@Body() body) {
     await this.userService.signUp(body.email, body.nickname, body.password);
