@@ -21,7 +21,6 @@ export class UsersController {
 
   // 여기 수정해야 된다.
   @ApiOperation({ summary: '로그인 유지' })
-  @UseGuards(LocalAuthGuard)
   @Get('/')
   async getUserInfo(@User() user) {
     return this.userService.getUserInfo(user);
