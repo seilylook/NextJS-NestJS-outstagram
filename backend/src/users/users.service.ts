@@ -15,6 +15,11 @@ export class UsersService {
   ) {}
 
   // 사용자 정보 가져오기
+  // 팔로우 정보 가져올 때 문제.
+  // user.me.Followings = {id, nickname} 만 있어야하는데
+  // user.me.Followings = {followingId: 2, followerId: 1, createdAt: ~, ...}
+  // post.User.id = 1
+  // 이렇게 다른 데이터가 들어있어 팔로우 버튼이 바뀌지 않는다.
   async getUserInfo(User: Users) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
