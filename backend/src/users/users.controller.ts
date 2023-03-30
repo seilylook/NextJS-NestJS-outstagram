@@ -6,6 +6,7 @@ import {
   Req,
   Res,
   Get,
+  Patch,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -51,5 +52,11 @@ export class UsersController {
     });
     res.clearCookie('connect.sid', { httpOnly: true });
     res.send('ok');
+  }
+
+  @ApiOperation({ summary: '닉네임 수정' })
+  @Patch('nickname')
+  async updateNickname(@User() user, @Body() body) {
+    return await this.userService.updateNickname(user, body.nickname);
   }
 }

@@ -160,9 +160,9 @@ export class PostsService {
       //   .delete()
       //   .from(Posts)
       //   .where('id = :id', { id: postId })
-      //   .execute();
+      //   .execute()
 
-      const result = await queryRunner.manager
+      await queryRunner.manager
         .getRepository(Posts)
         .createQueryBuilder('Post')
         .leftJoinAndSelect('Post.Images', 'Images')

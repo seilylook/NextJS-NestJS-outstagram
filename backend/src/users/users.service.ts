@@ -115,4 +115,39 @@ export class UsersService {
       await queryRunner.release();
     }
   }
+
+  async updateNickname(user: Users, nickname: string) {
+    // 유저정보: Users { id: 1, email: 'kim@kim.com', nickname: 'kim' }
+    // 바꿀 닉네임: python
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      await queryRunner.manager
+        .getRepository(Users)
+        .createQueryBuilder()
+        .update(Users)
+        .set({
+          nickname: nickname,
+        })
+        .where('id = :id', { id: user.id })
+        .execute();
+
+      const newUser = await queryRunner.manager
+        .getRepository(Users)
+        .createQueryBuilder('User')
+        .where('User.id = :id', { id: user.id })
+        .select(['User.id', 'User.email', 'User.nickname'])
+        .getOne();
+
+      await queryRunner.commitTransaction();
+      return newUser;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
 }
