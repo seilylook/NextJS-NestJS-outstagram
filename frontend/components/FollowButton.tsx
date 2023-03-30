@@ -15,28 +15,27 @@ const FollowButton = ({ post }: PostProp) => {
   const { me, followLoading, unfollowLoading } = useSelector(
     (state: RootReducerState) => state.user
   );
-  const isFollowing = me && me.Followings.find((v) => v.id === post.User.id);
+  const isFollowing =
+    me && me.Followings.find((v) => v.followingId === post.User.id);
   const dispatch = useDispatch();
 
   const onClickButton = useCallback(() => {
     if (isFollowing) {
       dispatch({
         type: UNFOLLOW_REQUEST,
-        data: {
-          id: post.User.id,
-          nickname: post.User.nickname,
-        },
+        data: post.User.id,
       });
     } else {
       dispatch({
         type: FOLLOW_REQUEST,
-        data: {
-          id: post.User.id,
-          nickname: post.User.nickname,
-        },
+        data: post.User.id,
       });
     }
-  }, [isFollowing, dispatch, post.User.id, post.User.nickname]);
+  }, [isFollowing, dispatch, post.User.id]);
+
+  if (post.User.id === me.id) {
+    return null;
+  }
 
   return (
     <Button onClick={onClickButton} loading={followLoading || unfollowLoading}>

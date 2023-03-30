@@ -30,7 +30,7 @@ const Profile = () => {
       <AppLayout>
         <NicknameEditForm />
         <FollowList header="팔로잉" data={me.Followings} />
-        <FollowList header="팔로워" data={me.Follwers} />
+        <FollowList header="팔로워" data={me.Followers} />
       </AppLayout>
     </>
   );

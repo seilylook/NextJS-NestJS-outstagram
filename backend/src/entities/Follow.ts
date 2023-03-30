@@ -33,12 +33,12 @@ export class Follow {
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'FollowingId', referencedColumnName: 'id' }])
-  following: Users;
+  Following: Users;
 
   @ManyToOne(() => Users, (users) => users.Followings, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'FollowerId', referencedColumnName: 'id' }])
-  follower: Users;
+  Follower: Users;
 }

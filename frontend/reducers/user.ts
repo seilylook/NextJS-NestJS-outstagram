@@ -173,6 +173,7 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case FOLLOW_SUCCESS:
         draft.followLoading = false;
         draft.followDone = true;
+        console.log(action.data);
         draft.me.Followings.push({
           id: action.data.id,
           nickname: action.data.nickname,

@@ -4,6 +4,7 @@ import { Repository, DataSource } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Users } from '../entities/Users';
+import { Follow } from '../entities/Follow';
 
 @Injectable()
 export class UsersService {
@@ -144,6 +145,38 @@ export class UsersService {
 
       await queryRunner.commitTransaction();
       return newUser;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async follow(targetId: number, userId: number) {
+    // 팔로우 할 대상: 2
+    // 내 정보: 1
+    // console.log('팔로우 할 대상:', targetId);
+    // console.log('내 정보:', userId);
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      await queryRunner.manager.getRepository(Follow).save({
+        followerId: userId,
+        followingId: targetId,
+      });
+
+      const user = await queryRunner.manager
+        .getRepository(Users)
+        .createQueryBuilder('User')
+        .where('User.id = :id', { id: targetId })
+        .select(['User.id', 'User.nickname'])
+        .getOne();
+
+      await queryRunner.commitTransaction();
+      return user;
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {

@@ -7,6 +7,7 @@ import {
   Res,
   Get,
   Patch,
+  Param,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -58,5 +59,20 @@ export class UsersController {
   @Patch('nickname')
   async updateNickname(@User() user, @Body() body) {
     return await this.userService.updateNickname(user, body.nickname);
+  }
+
+  @ApiOperation({ summary: '팔로우' })
+  @Patch(':targetId/follow')
+  async follow(@Param('targetId') targetId: number, @User() user) {
+    // return
+    // data:
+    // {
+    //   id: action.data.id,
+    //   nickname: action.data.nickname,
+    // }
+
+    // 팔로우할 대상: 2
+    // 내 계정: Users { id: 1, email: 'kim@kim.com', nickname: 'kim' }
+    return await this.userService.follow(targetId, user.id);
   }
 }

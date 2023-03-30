@@ -40,10 +40,10 @@ export class Users {
   @OneToMany(() => Comments, (comments) => comments.User)
   Comments: Comments[];
 
-  @OneToMany(() => Follow, (follow) => follow.following)
+  @OneToMany(() => Follow, (follow) => follow.Following)
   Followers: Follow[];
 
-  @OneToMany(() => Follow, (follow) => follow.follower)
+  @OneToMany(() => Follow, (follow) => follow.Follower)
   Followings: Follow[];
 
   @OneToMany(() => Like, (like) => like.user)
