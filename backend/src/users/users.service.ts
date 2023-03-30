@@ -14,6 +14,7 @@ export class UsersService {
     private dataSource: DataSource,
   ) {}
 
+  // 사용자 정보 가져오기
   async getUserInfo(User: Users) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -50,6 +51,7 @@ export class UsersService {
     }
   }
 
+  /** 로그인 */
   async login(User: Users) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -86,6 +88,7 @@ export class UsersService {
     }
   }
 
+  /** 로그아웃 */
   async signUp(email: string, nickname: string, password: string) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -117,6 +120,7 @@ export class UsersService {
     }
   }
 
+  /** 닉네임 변경 */
   async updateNickname(user: Users, nickname: string) {
     // 유저정보: Users { id: 1, email: 'kim@kim.com', nickname: 'kim' }
     // 바꿀 닉네임: python
@@ -152,6 +156,7 @@ export class UsersService {
     }
   }
 
+  /** 팔로우 */
   async follow(targetId: number, userId: number) {
     // 팔로우 할 대상: 2
     // 내 정보: 1
@@ -171,8 +176,16 @@ export class UsersService {
       const user = await queryRunner.manager
         .getRepository(Users)
         .createQueryBuilder('User')
+        .leftJoinAndSelect('User.Followings', 'Followings')
+        .leftJoinAndSelect('Followings.Follower', 'followingUserData')
+        .leftJoinAndSelect('User.Followers', 'Followers')
         .where('User.id = :id', { id: targetId })
-        .select(['User.id', 'User.nickname'])
+        .select([
+          'User.id',
+          'User.nickname',
+          'followingUserData.id',
+          'followingUserData.nickname',
+        ])
         .getOne();
 
       await queryRunner.commitTransaction();
