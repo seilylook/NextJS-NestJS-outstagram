@@ -174,10 +174,7 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case FOLLOW_SUCCESS:
         draft.followLoading = false;
         draft.followDone = true;
-        console.log("받아온 데이터", action.data);
         draft.me.Followings = action.data.Followings;
-        // draft.me.Followings.push(action.data.Followings.followingId);
-        console.log("들어간 데이터 확인", draft.me);
         break;
 
       case FOLLOW_FAILURE:

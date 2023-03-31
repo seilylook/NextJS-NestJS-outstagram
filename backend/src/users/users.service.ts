@@ -181,7 +181,7 @@ export class UsersService {
         followingId: targetId,
       });
 
-      const user = await queryRunner.manager
+      const followingUser = await queryRunner.manager
         .getRepository(Users)
         .createQueryBuilder('User')
         .leftJoinAndSelect('User.Followings', 'Followings')
@@ -189,9 +189,8 @@ export class UsersService {
         .select(['User.id', 'User.nickname', 'Followings'])
         .getOne();
 
-      console.log(user);
       await queryRunner.commitTransaction();
-      return user;
+      return followingUser;
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {
