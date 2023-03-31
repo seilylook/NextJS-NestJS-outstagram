@@ -177,7 +177,6 @@ export class UsersService {
         .select(['User.id', 'User.nickname', 'Followings', 'Followers'])
         .getOne();
 
-      console.log(user);
       await queryRunner.commitTransaction();
       return user;
     } catch (error) {
@@ -194,7 +193,7 @@ export class UsersService {
     await queryRunner.startTransaction();
 
     try {
-      const user = await queryRunner.manager
+      const exist = await queryRunner.manager
         .getRepository(Users)
         .createQueryBuilder('User')
         .leftJoinAndSelect('User.Followings', 'Followings')
@@ -202,12 +201,20 @@ export class UsersService {
         .select(['User.id', 'User.nickname', 'Followings'])
         .getOne();
 
-      if (!user) {
+      if (!exist) {
         return null;
       }
 
-      console.log(user);
+      await queryRunner.manager
+        .getRepository(Follow)
+        .createQueryBuilder('Follow')
+        .delete()
+        .from(Follow)
+        .where('followingId = :id', { id: targetId })
+        .execute();
+
       await queryRunner.commitTransaction();
+      return targetId;
     } catch (error) {
       console.error(error);
       await queryRunner.rollbackTransaction();
