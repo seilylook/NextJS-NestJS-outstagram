@@ -15,11 +15,6 @@ export class UsersService {
   ) {}
 
   // 사용자 정보 가져오기
-  // 팔로우 정보 가져올 때 문제.
-  // user.me.Followings = {id, nickname} 만 있어야하는데
-  // user.me.Followings = {followingId: 2, followerId: 1, createdAt: ~, ...}
-  // post.User.id = 1
-  // 이렇게 다른 데이터가 들어있어 팔로우 버튼이 바뀌지 않는다.
   async getUserInfo(User: Users) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -32,7 +27,6 @@ export class UsersService {
         .leftJoinAndSelect('users.Posts', 'Posts')
         .leftJoinAndSelect('users.Comments', 'Comments')
         .leftJoinAndSelect('users.Followings', 'Followings')
-        .leftJoinAndSelect('Followings.Following', 'followingUser')
         .leftJoinAndSelect('users.Followers', 'Followers')
         .leftJoinAndSelect('users.Likes', 'Likes')
         .where('users.id = :id', { id: User.id })
@@ -42,10 +36,8 @@ export class UsersService {
           'users.nickname',
           'Posts',
           'Comments',
-          'Followers',
           'Followings',
-          'followingUser.id',
-          'followingUser.nickname',
+          'Followers',
           'Likes',
         ])
         .getOne();
@@ -166,11 +158,6 @@ export class UsersService {
 
   /** 팔로우 */
   async follow(targetId: number, userId: number) {
-    // 팔로우 할 대상: 2
-    // 내 정보: 1
-    // console.log('팔로우 할 대상:', targetId);
-    // console.log('내 정보:', userId);
-
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -181,17 +168,48 @@ export class UsersService {
         followingId: targetId,
       });
 
-      const followingUser = await queryRunner.manager
+      const user = await queryRunner.manager
         .getRepository(Users)
         .createQueryBuilder('User')
         .leftJoinAndSelect('User.Followings', 'Followings')
+        .leftJoinAndSelect('User.Followers', 'Followers')
         .where('User.id = :id', { id: userId })
+        .select(['User.id', 'User.nickname', 'Followings', 'Followers'])
+        .getOne();
+
+      console.log(user);
+      await queryRunner.commitTransaction();
+      return user;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  /** 언팔로우 */
+  async unfollow(targetId: number, userId: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const user = await queryRunner.manager
+        .getRepository(Users)
+        .createQueryBuilder('User')
+        .leftJoinAndSelect('User.Followings', 'Followings')
+        .where('User.id = :id', { id: targetId })
         .select(['User.id', 'User.nickname', 'Followings'])
         .getOne();
 
+      if (!user) {
+        return null;
+      }
+
+      console.log(user);
       await queryRunner.commitTransaction();
-      return followingUser;
     } catch (error) {
+      console.error(error);
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();

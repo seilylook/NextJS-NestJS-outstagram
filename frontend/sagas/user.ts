@@ -138,7 +138,7 @@ function* unfollow(action) {
 
     yield put({
       type: UNFOLLOW_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
   } catch (err) {
     console.error(err);

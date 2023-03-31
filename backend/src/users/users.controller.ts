@@ -8,6 +8,7 @@ import {
   Get,
   Patch,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -74,5 +75,14 @@ export class UsersController {
     // 팔로우할 대상: 2
     // 내 계정: Users { id: 1, email: 'kim@kim.com', nickname: 'kim' }
     return await this.userService.follow(targetId, user.id);
+  }
+
+  @ApiOperation({ summary: '언팔로우' })
+  @Delete(':targetId/follow')
+  async unfollow(@Param('targetId') targetId: number, @User() user) {
+    // console.log('현재 로그인 한 계정', user);
+    // console.log('언팔할 계정 아이디', targetId);
+
+    return await this.userService.unfollow(targetId, user.id);
   }
 }

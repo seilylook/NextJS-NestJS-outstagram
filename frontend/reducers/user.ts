@@ -174,7 +174,9 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case FOLLOW_SUCCESS:
         draft.followLoading = false;
         draft.followDone = true;
+        console.log(action.data);
         draft.me.Followings = action.data.Followings;
+        draft.me.Follwers = action.data.Followers;
         break;
 
       case FOLLOW_FAILURE:
@@ -191,6 +193,7 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case UNFOLLOW_SUCCESS:
         draft.unfollowLoading = false;
         draft.unfollowDone = true;
+        console.log(action.data.Followings);
         draft.me.Followings = draft.me.Followings.filter(
           (v) => v.id !== action.data.id
         );
