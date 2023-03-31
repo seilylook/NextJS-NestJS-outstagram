@@ -81,6 +81,7 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case LOAD_USER_INFO_SUCCESS:
         draft.loadUserInfoLoading = false;
         draft.loadUserInfoDone = true;
+        console.log(action.data);
         draft.me = action.data;
         break;
 
@@ -173,11 +174,10 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case FOLLOW_SUCCESS:
         draft.followLoading = false;
         draft.followDone = true;
-        console.log(action.data);
-        draft.me.Followings.push({
-          id: action.data.id,
-          nickname: action.data.nickname,
-        });
+        console.log("받아온 데이터", action.data);
+        draft.me.Followings = action.data.Followings;
+        // draft.me.Followings.push(action.data.Followings.followingId);
+        console.log("들어간 데이터 확인", draft.me);
         break;
 
       case FOLLOW_FAILURE:

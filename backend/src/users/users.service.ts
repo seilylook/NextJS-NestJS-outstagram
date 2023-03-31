@@ -32,6 +32,7 @@ export class UsersService {
         .leftJoinAndSelect('users.Posts', 'Posts')
         .leftJoinAndSelect('users.Comments', 'Comments')
         .leftJoinAndSelect('users.Followings', 'Followings')
+        .leftJoinAndSelect('Followings.Following', 'followingUser')
         .leftJoinAndSelect('users.Followers', 'Followers')
         .leftJoinAndSelect('users.Likes', 'Likes')
         .where('users.id = :id', { id: User.id })
@@ -43,6 +44,8 @@ export class UsersService {
           'Comments',
           'Followers',
           'Followings',
+          'followingUser.id',
+          'followingUser.nickname',
           'Likes',
         ])
         .getOne();
@@ -182,17 +185,11 @@ export class UsersService {
         .getRepository(Users)
         .createQueryBuilder('User')
         .leftJoinAndSelect('User.Followings', 'Followings')
-        .leftJoinAndSelect('Followings.Follower', 'followingUserData')
-        .leftJoinAndSelect('User.Followers', 'Followers')
-        .where('User.id = :id', { id: targetId })
-        .select([
-          'User.id',
-          'User.nickname',
-          'followingUserData.id',
-          'followingUserData.nickname',
-        ])
+        .where('User.id = :id', { id: userId })
+        .select(['User.id', 'User.nickname', 'Followings'])
         .getOne();
 
+      console.log(user);
       await queryRunner.commitTransaction();
       return user;
     } catch (error) {
