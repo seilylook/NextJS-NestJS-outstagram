@@ -31,6 +31,14 @@ export const initialState = {
   changeNicknameDone: false,
   changeNicknameError: null,
 
+  loadFollowingsLoading: false, // 팔로잉 목록 가져오기
+  loadFollowingsDone: false,
+  loadFollowingsError: null,
+
+  loadFollowersLoading: false, // 팔로우 목록 가져오기
+  loadFollowersDone: false,
+  loadFollowersError: null,
+
   signUpData: {},
   logInData: {},
   me: null,
@@ -66,6 +74,14 @@ export const CHANGE_NICKNAME_FAILURE = "CHANGE_NICKNAME_FAILURE";
 
 export const ADD_POST_TO_ME = "ADD_POST_TO_ME";
 export const REMOVE_POST_OF_ME = "REMOVE_POST_OF_ME";
+
+export const LOAD_FOLLOWINGS_REQUEST = "LOAD_FOLLOWINGS_REQUEST";
+export const LOAD_FOLLOWINGS_SUCCESS = "LOAD_FOLLOWINGS_SUCCESS";
+export const LOAD_FOLLOWINGS_FAILURE = "LOAD_FOLLOWINGS_FAILURE";
+
+export const LOAD_FOLLOWERS_REQUEST = "LOAD_FOLLOWERS_REQUEST";
+export const LOAD_FOLLOWERS_SUCCESS = "LOAD_FOLLOWERS_SUCCESS";
+export const LOAD_FOLLOWERS_FAILURE = "LOAD_FOLLOWERS_FAILURE";
 
 export type UserReducerState = typeof initialState;
 
