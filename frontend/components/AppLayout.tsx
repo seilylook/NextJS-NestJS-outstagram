@@ -29,12 +29,12 @@ const AppLayout = ({ children }: ChildrenProp) => {
             <Link href="/">outstagram</Link>
           </Menu.Item>
           <Menu.Item>
+            <SearchInput enterButton />
+          </Menu.Item>
+          <Menu.Item>
             <Link href="/profile">
               <UserOutlined />
             </Link>
-          </Menu.Item>
-          <Menu.Item>
-            <SearchInput enterButton />
           </Menu.Item>
           <Menu.Item>
             <Link href="/signup">

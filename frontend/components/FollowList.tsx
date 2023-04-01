@@ -2,6 +2,10 @@ import { List, Card, Button } from "antd";
 import { StopOutlined } from "@ant-design/icons";
 
 type FollowInfo = {
+  Following: {
+    id: number;
+    nickname: string;
+  };
   nickname: string;
 };
 
