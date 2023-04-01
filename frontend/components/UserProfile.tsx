@@ -1,11 +1,11 @@
 import { useCallback } from "react";
 import { LOG_OUT_REQUEST } from "../reducers/user";
+import { RootReducerState } from "@/reducers";
 
 import styled from "styled-components";
 import { Card, Avatar, Button } from "antd";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { RootReducerState } from "@/reducers";
 
 const ButtonWrapper = styled(Button)`
   margin-top: 10px;

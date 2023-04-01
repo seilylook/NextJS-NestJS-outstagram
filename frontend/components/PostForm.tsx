@@ -1,10 +1,12 @@
 import { useCallback, useRef, useEffect } from "react";
+import useInput from "@/hooks/useInput";
+
 import { useSelector, useDispatch } from "react-redux";
 import { RootReducerState } from "@/reducers";
 import { ADD_POST_REQUEST } from "@/reducers/post";
 
 import { Form, Input, Button } from "antd";
-import useInput from "@/hooks/useInput";
+import { TwitterOutlined } from "@ant-design/icons";
 
 const PostForm = () => {
   const [text, onChangeText, setText] = useInput("");
@@ -65,7 +67,7 @@ const PostForm = () => {
           htmlType="submit"
           loading={false}
         >
-          삐약
+          <TwitterOutlined />
         </Button>
       </div>
       <div>

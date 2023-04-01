@@ -12,11 +12,14 @@ import { CommentType } from "@/types/CommentType";
 
 import { Card, Button, Popover, Avatar, List } from "antd";
 import {
+  DeleteOutlined,
+  EditOutlined,
   EllipsisOutlined,
-  HeartOutlined,
-  HeartTwoTone,
+  LikeOutlined,
+  LikeTwoTone,
   MessageOutlined,
   RetweetOutlined,
+  WarningOutlined,
 } from "@ant-design/icons";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
@@ -80,13 +83,13 @@ const PostCard = ({ post }: PostProp) => {
         actions={[
           <RetweetOutlined key="retwitt" />,
           liked ? (
-            <HeartTwoTone
+            <LikeTwoTone
               twoToneColor="#eb2f96"
               key="heart"
               onClick={onUnLike}
             />
           ) : (
-            <HeartOutlined key="heart" onClick={onLike} />
+            <LikeOutlined key="heart" onClick={onLike} />
           ),
           <MessageOutlined key="message" onClick={onToggleComment} />,
           <Popover
@@ -95,18 +98,22 @@ const PostCard = ({ post }: PostProp) => {
               <Button.Group>
                 {id && post.User.id === id ? (
                   <>
-                    <Button>수정</Button>
+                    <Button>
+                      <EditOutlined />
+                    </Button>
                     <Button
                       danger
                       onClick={onRemovePost}
                       loading={removePostLoading}
                     >
-                      삭제
+                      <DeleteOutlined />
                     </Button>
                   </>
                 ) : (
                   <>
-                    <Button>신고</Button>
+                    <Button>
+                      <WarningOutlined />
+                    </Button>
                   </>
                 )}
               </Button.Group>

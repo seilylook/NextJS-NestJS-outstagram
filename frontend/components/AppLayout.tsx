@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { Menu, Input, Row, Col } from "antd";
 import styled from "styled-components";
+import { SendOutlined, UserOutlined, UserAddOutlined } from "@ant-design/icons";
 
 import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
@@ -28,13 +29,20 @@ const AppLayout = ({ children }: ChildrenProp) => {
             <Link href="/">outstagram</Link>
           </Menu.Item>
           <Menu.Item>
-            <Link href="/profile">프로필</Link>
+            <Link href="/profile">
+              <UserOutlined />
+            </Link>
           </Menu.Item>
           <Menu.Item>
             <SearchInput enterButton />
           </Menu.Item>
           <Menu.Item>
-            <Link href="/signup">회원가입</Link>
+            <Link href="/signup">
+              <UserAddOutlined />
+            </Link>
+          </Menu.Item>
+          <Menu.Item>
+            <SendOutlined />
           </Menu.Item>
         </Menu>
         <Row gutter={8}>
