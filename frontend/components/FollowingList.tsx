@@ -14,7 +14,7 @@ type Props = {
   data: FollowInfo[];
 };
 
-const FollowList = ({ header, data }: Props) => {
+const FollowingList = ({ header, data }: Props) => {
   console.log("들어온 데이터", data);
   return (
     <List
@@ -44,4 +44,4 @@ const FollowList = ({ header, data }: Props) => {
   );
 };
 
-export default FollowList;
+export default FollowingList;

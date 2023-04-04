@@ -3,15 +3,16 @@ import { useSelector } from "react-redux";
 import { RootReducerState } from "@/reducers";
 import Head from "next/head";
 import Router from "next/router";
-
-import AppLayout from "@/components/AppLayout";
-import NicknameEditForm from "@/components/NicknameEditForm";
-import FollowList from "@/components/FollowList";
 import { useDispatch } from "react-redux";
 import {
   LOAD_FOLLOWERS_REQUEST,
   LOAD_FOLLOWINGS_REQUEST,
 } from "@/reducers/user";
+
+import AppLayout from "@/components/AppLayout";
+import NicknameEditForm from "@/components/NicknameEditForm";
+import FollowingList from "@/components/FollowingList";
+import FollowerList from "@/components/FollowerList";
 
 const Profile = () => {
   const { me } = useSelector((state: RootReducerState) => state.user);
@@ -44,8 +45,8 @@ const Profile = () => {
       </Head>
       <AppLayout>
         <NicknameEditForm />
-        <FollowList header="팔로잉" data={me.Followings} />
-        <FollowList header="팔로워" data={me.Followers} />
+        <FollowingList header="팔로잉" data={me.Followings} />
+        <FollowerList header="팔로워" data={me.Followers} />
       </AppLayout>
     </>
   );

@@ -229,8 +229,25 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
         break;
 
       case LOAD_FOLLOWINGS_FAILURE:
-        draft.loadFollowingsLoading = false;
-        draft.loadFollowingsError = action.error;
+        draft.loadFollowersLoading = false;
+        draft.loadFollowersError = action.error;
+        break;
+
+      case LOAD_FOLLOWERS_REQUEST:
+        draft.loadFollowersLoading = true;
+        draft.loadFollowersDone = false;
+        draft.loadFollowersError = null;
+        break;
+
+      case LOAD_FOLLOWERS_SUCCESS:
+        draft.loadFollowersLoading = false;
+        draft.loadFollowersDone = true;
+        draft.me.Followers = action.data;
+        break;
+
+      case LOAD_FOLLOWERS_FAILURE:
+        draft.loadFollowersLoading = false;
+        draft.loadFollowersError = action.error;
         break;
 
       default:

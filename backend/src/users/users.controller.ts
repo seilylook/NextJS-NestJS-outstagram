@@ -91,4 +91,10 @@ export class UsersController {
   async loadFollowings(@User() user) {
     return await this.userService.loadFollowings(user.id);
   }
+
+  @ApiOperation({ summary: '팔로워 데이터 가져오기' })
+  @Get('followers')
+  async loadFollowers(@User() user) {
+    return await this.userService.loadFollowers(user.id);
+  }
 }

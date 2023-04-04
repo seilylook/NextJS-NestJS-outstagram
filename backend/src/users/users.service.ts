@@ -252,8 +252,48 @@ export class UsersService {
           'User.id',
           'User.nickname',
         ])
+        .where('Follow.followerId = :id', { id: userId })
         .getMany();
 
+      await queryRunner.commitTransaction();
+      return user;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async loadFollowers(userId: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const existUser = await queryRunner.manager
+        .getRepository(Users)
+        .createQueryBuilder('User')
+        .where('User.id = :id', { id: userId })
+        .getOne();
+
+      if (!existUser) {
+        return null;
+      }
+
+      const user = await queryRunner.manager
+        .getRepository(Follow)
+        .createQueryBuilder('Follow')
+        .innerJoinAndSelect('Follow.Follower', 'User')
+        .select([
+          'Follow.followingId',
+          'Follow.followerId',
+          'User.id',
+          'User.nickname',
+        ])
+        .where('Follow.followingId = :id', { id: userId })
+        .getMany();
+
+      console.log(user);
       await queryRunner.commitTransaction();
       return user;
     } catch (error) {
