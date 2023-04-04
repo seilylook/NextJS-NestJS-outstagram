@@ -97,4 +97,12 @@ export class UsersController {
   async loadFollowers(@User() user) {
     return await this.userService.loadFollowers(user.id);
   }
+
+  @ApiOperation({ summary: '팔로워 삭제하기' })
+  @Delete('followers/:targetId')
+  async removeFollower(@Param('targetId') targetId: number, @User() user) {
+    // console.log('현재 로그인 한 유저:', user);
+    // console.log('지울 사용자 아이디:', targetId);
+    return await this.userService.removeFollower(targetId, user.id);
+  }
 }

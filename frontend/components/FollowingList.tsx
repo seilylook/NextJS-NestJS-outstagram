@@ -15,7 +15,6 @@ type Props = {
 };
 
 const FollowingList = ({ header, data }: Props) => {
-  console.log("들어온 데이터", data);
   return (
     <List
       style={{ marginBottom: "20px" }}

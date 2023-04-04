@@ -1,4 +1,4 @@
-import { all, delay, fork, takeLatest, put, call } from "redux-saga/effects";
+import { all, fork, takeLatest, put, call } from "redux-saga/effects";
 import {
   LOAD_USER_INFO_REQUEST,
   LOAD_USER_INFO_SUCCESS,
@@ -27,6 +27,9 @@ import {
   LOAD_FOLLOWERS_REQUEST,
   LOAD_FOLLOWERS_SUCCESS,
   LOAD_FOLLOWERS_FAILURE,
+  REMOVE_FOLLOWER_REQUEST,
+  REMOVE_FOLLOWER_SUCCESS,
+  REMOVE_FOLLOWER_FAILURE,
 } from "../reducers/user";
 import axios from "axios";
 
@@ -197,6 +200,27 @@ function* loadFollowers(action) {
   }
 }
 
+function removeFollowerAPI(data) {
+  return axios.delete(`/users/followers/${data}`);
+}
+
+function* removeFollower(action) {
+  try {
+    const result = yield call(removeFollowerAPI, action.data);
+
+    yield put({
+      type: REMOVE_FOLLOWER_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: REMOVE_FOLLOWER_FAILURE,
+      data: err.response.data,
+    });
+  }
+}
+
 function changeNicknameAPI(data) {
   return axios.patch("/users/nickname", { nickname: data });
 }
@@ -250,6 +274,10 @@ function* watchLoadFollowers() {
   yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
 }
 
+function* watchRemoveFollower() {
+  yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower);
+}
+
 function* watchChangeNickname() {
   yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
 }
@@ -264,6 +292,7 @@ export default function* userSaga() {
     fork(watchUnFollow),
     fork(watchLoadFollowings),
     fork(watchLoadFollowers),
+    fork(watchRemoveFollower),
     fork(watchChangeNickname),
   ]);
 }

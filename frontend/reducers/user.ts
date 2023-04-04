@@ -39,6 +39,10 @@ export const initialState = {
   loadFollowersDone: false,
   loadFollowersError: null,
 
+  removeFollowerLoading: false, // 팔로우 없애기
+  removeFollowerDone: false,
+  removeFollowerError: null,
+
   signUpData: {},
   logInData: {},
   me: null,
@@ -82,6 +86,10 @@ export const LOAD_FOLLOWINGS_FAILURE = "LOAD_FOLLOWINGS_FAILURE";
 export const LOAD_FOLLOWERS_REQUEST = "LOAD_FOLLOWERS_REQUEST";
 export const LOAD_FOLLOWERS_SUCCESS = "LOAD_FOLLOWERS_SUCCESS";
 export const LOAD_FOLLOWERS_FAILURE = "LOAD_FOLLOWERS_FAILURE";
+
+export const REMOVE_FOLLOWER_REQUEST = "REMOVE_FOLLOWER_REQUEST";
+export const REMOVE_FOLLOWER_SUCCESS = "REMOVE_FOLLOWER_SUCCESS";
+export const REMOVE_FOLLOWER_FAILURE = "REMOVE_FOLLOWER_FAILURE";
 
 export type UserReducerState = typeof initialState;
 
@@ -248,6 +256,25 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case LOAD_FOLLOWERS_FAILURE:
         draft.loadFollowersLoading = false;
         draft.loadFollowersError = action.error;
+        break;
+
+      case REMOVE_FOLLOWER_REQUEST:
+        draft.removeFollowerLoading = true;
+        draft.removeFollowerDone = false;
+        draft.removeFollowerError = null;
+        break;
+
+      case REMOVE_FOLLOWER_SUCCESS:
+        draft.removeFollowerLoading = false;
+        draft.removeFollowerDone = true;
+        draft.me.Followers = draft.me.Followers.filter(
+          (v) => v.followerId !== action.data
+        );
+        break;
+
+      case REMOVE_FOLLOWER_FAILURE:
+        draft.removeFollowerLoading = false;
+        draft.removeFollowerError = action.error;
         break;
 
       default:

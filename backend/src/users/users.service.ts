@@ -293,9 +293,42 @@ export class UsersService {
         .where('Follow.followingId = :id', { id: userId })
         .getMany();
 
-      console.log(user);
       await queryRunner.commitTransaction();
       return user;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async removeFollower(targetId: number, userId: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const existUser = await queryRunner.manager
+        .getRepository(Users)
+        .createQueryBuilder('User')
+        .where('User.id = :id', { id: targetId })
+        .getOne();
+
+      if (!existUser) {
+        return null;
+      }
+
+      await queryRunner.manager
+        .getRepository(Follow)
+        .createQueryBuilder('Follow')
+        .innerJoinAndSelect('Follow.Follower', 'User')
+        .select(['Follow.followerId'])
+        .delete()
+        .where('Follow.followerId = :id', { id: targetId })
+        .execute();
+
+      await queryRunner.commitTransaction();
+      return targetId;
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {

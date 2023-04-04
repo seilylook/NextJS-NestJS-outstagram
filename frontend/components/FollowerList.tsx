@@ -1,3 +1,7 @@
+import { useDispatch } from "react-redux";
+import { useCallback } from "react";
+import { REMOVE_FOLLOWER_REQUEST } from "@/reducers/user";
+
 import { List, Card, Button } from "antd";
 import { StopOutlined } from "@ant-design/icons";
 
@@ -15,6 +19,17 @@ type Props = {
 };
 
 const FollowerList = ({ header, data }: Props) => {
+  const dispatch = useDispatch();
+  const removeFollower = useCallback(
+    (id: number) => {
+      dispatch({
+        type: REMOVE_FOLLOWER_REQUEST,
+        data: id,
+      });
+    },
+    [dispatch]
+  );
+
   return (
     <List
       style={{ marginBottom: "20px" }}
@@ -28,17 +43,26 @@ const FollowerList = ({ header, data }: Props) => {
       }
       bordered
       dataSource={data}
-      renderItem={(item) => (
-        <List.Item style={{ marginTop: "20px" }}>
-          <Card>
-            <Card actions={[<StopOutlined key="stop" />]}>
-              {item.Follower && (
-                <Card.Meta description={item.Follower.nickname} />
-              )}
-            </Card>
-          </Card>
-        </List.Item>
-      )}
+      renderItem={(item) => {
+        return (
+          item.Follower && (
+            <List.Item style={{ marginTop: "20px" }}>
+              <Card>
+                <Card
+                  actions={[
+                    <StopOutlined
+                      key="stop"
+                      onClick={() => removeFollower(item.Follower.id)}
+                    />,
+                  ]}
+                >
+                  <Card.Meta description={item.Follower.nickname} />
+                </Card>
+              </Card>
+            </List.Item>
+          )
+        );
+      }}
     />
   );
 };
