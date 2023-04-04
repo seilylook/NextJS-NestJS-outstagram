@@ -171,14 +171,17 @@ export class UsersService {
       const user = await queryRunner.manager
         .getRepository(Users)
         .createQueryBuilder('User')
-        .leftJoinAndSelect('User.Followings', 'Followings')
-        .leftJoinAndSelect('User.Followers', 'Followers')
-        .where('User.id = :id', { id: userId })
-        .select(['User.id', 'User.nickname', 'Followings', 'Followers'])
+        .where('User.id = :id', { id: targetId })
+        .select(['User.id', 'User.nickname'])
         .getOne();
 
+      const result = {
+        followingId: user.id,
+        nickname: user.nickname,
+      };
+
       await queryRunner.commitTransaction();
-      return user;
+      return result;
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {
@@ -187,7 +190,7 @@ export class UsersService {
   }
 
   /** 언팔로우 */
-  async unfollow(targetId: number, userId: number) {
+  async unfollow(targetId: number) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -217,6 +220,43 @@ export class UsersService {
       return targetId;
     } catch (error) {
       console.error(error);
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async loadFollowings(userId: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const existUser = await queryRunner.manager
+        .getRepository(Users)
+        .createQueryBuilder('User')
+        .where('User.id = :id', { id: userId })
+        .getOne();
+
+      if (!existUser) {
+        return null;
+      }
+
+      const user = await queryRunner.manager
+        .getRepository(Follow)
+        .createQueryBuilder('Follow')
+        .innerJoinAndSelect('Follow.Following', 'User')
+        .select([
+          'Follow.followingId',
+          'Follow.followerId',
+          'User.id',
+          'User.nickname',
+        ])
+        .getMany();
+
+      await queryRunner.commitTransaction();
+      return user;
+    } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();

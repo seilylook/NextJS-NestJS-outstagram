@@ -189,8 +189,7 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case FOLLOW_SUCCESS:
         draft.followLoading = false;
         draft.followDone = true;
-        draft.me.Followings = action.data.Followings;
-        draft.me.Follwers = action.data.Followers;
+        draft.me.Followings.push(action.data);
         break;
 
       case FOLLOW_FAILURE:
@@ -215,6 +214,23 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case UNFOLLOW_FAILURE:
         draft.unfollowLoading = false;
         draft.unfollowError = action.error;
+        break;
+
+      case LOAD_FOLLOWINGS_REQUEST:
+        draft.loadFollowingsLoading = true;
+        draft.loadFollowingsDone = false;
+        draft.loadFollowingsError = null;
+        break;
+
+      case LOAD_FOLLOWINGS_SUCCESS:
+        draft.loadFollowingsLoading = false;
+        draft.loadFollowingsDone = true;
+        draft.me.Followings = action.data;
+        break;
+
+      case LOAD_FOLLOWINGS_FAILURE:
+        draft.loadFollowingsLoading = false;
+        draft.loadFollowingsError = action.error;
         break;
 
       default:

@@ -15,6 +15,7 @@ type Props = {
 };
 
 const FollowList = ({ header, data }: Props) => {
+  console.log("들어온 데이터", data);
   return (
     <List
       style={{ marginBottom: "20px" }}
@@ -32,7 +33,9 @@ const FollowList = ({ header, data }: Props) => {
         <List.Item style={{ marginTop: "20px" }}>
           <Card>
             <Card actions={[<StopOutlined key="stop" />]}>
-              <Card.Meta description={item.nickname} />
+              {item.Following && (
+                <Card.Meta description={item.Following.nickname} />
+              )}
             </Card>
           </Card>
         </List.Item>

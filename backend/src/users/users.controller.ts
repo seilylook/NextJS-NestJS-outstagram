@@ -79,10 +79,16 @@ export class UsersController {
 
   @ApiOperation({ summary: '언팔로우' })
   @Delete(':targetId/follow')
-  async unfollow(@Param('targetId') targetId: number, @User() user) {
+  async unfollow(@Param('targetId') targetId: number) {
     // console.log('현재 로그인 한 계정', user);
     // console.log('언팔할 계정 아이디', targetId);
 
-    return await this.userService.unfollow(targetId, user.id);
+    return await this.userService.unfollow(targetId);
+  }
+
+  @ApiOperation({ summary: '팔로잉 데이터 가져오기' })
+  @Get('followings')
+  async loadFollowings(@User() user) {
+    return await this.userService.loadFollowings(user.id);
   }
 }
