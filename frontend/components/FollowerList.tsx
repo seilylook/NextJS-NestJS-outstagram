@@ -56,7 +56,10 @@ const FollowerList = ({ header, data }: Props) => {
                     />,
                   ]}
                 >
-                  <Card.Meta description={item.Follower.nickname} />
+                  <Card.Meta
+                    style={{ textAlign: "center" }}
+                    description={item.Follower.nickname}
+                  />
                 </Card>
               </Card>
             </List.Item>

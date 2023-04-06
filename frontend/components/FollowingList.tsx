@@ -33,7 +33,10 @@ const FollowingList = ({ header, data }: Props) => {
           <Card>
             <Card actions={[<StopOutlined key="stop" />]}>
               {item.Following && (
-                <Card.Meta description={item.Following.nickname} />
+                <Card.Meta
+                  style={{ textAlign: "center" }}
+                  description={item.Following.nickname}
+                />
               )}
             </Card>
           </Card>
