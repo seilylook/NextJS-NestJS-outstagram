@@ -87,11 +87,11 @@ const PostForm = () => {
           htmlType="submit"
           loading={false}
         >
-          짹짹
+          <TwitterOutlined />
         </Button>
       </div>
       <div>
-        {imagePaths.map((v, i) => (
+        {imagePaths.map((v) => (
           <div key={v} style={{ display: "inline-block" }}>
             <img
               src={`http://localhost:3060/${v}`}
