@@ -87,7 +87,7 @@ const PostForm = () => {
           htmlType="submit"
           loading={false}
         >
-          <TwitterOutlined />
+          짹짹
         </Button>
       </div>
       <div>

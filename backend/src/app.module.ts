@@ -20,6 +20,8 @@ import { Follow } from './entities/Follow';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerOptionsFactory } from './common/utils/multer.options.factory';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -43,6 +45,9 @@ import { multerOptionsFactory } from './common/utils/multer.options.factory';
     NestjsFormDataModule,
     MulterModule.registerAsync({
       useFactory: multerOptionsFactory,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, 'uploads'),
     }),
   ],
   controllers: [AppController, UsersController, PostsController],

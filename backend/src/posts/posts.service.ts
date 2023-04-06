@@ -6,6 +6,7 @@ import { Users } from '../entities/Users';
 import { Posts } from '../entities/Posts';
 import { Comments } from '../entities/Comments';
 import { Like } from '../entities/Like';
+import { Images } from '../entities/Images';
 
 // --- mainPosts---
 // mainPosts: [
@@ -97,16 +98,37 @@ export class PostsService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    // console.log('저장할 데이터');
-    // console.log(post);
+    // {
+    //   image: '29KBYK3JT0_1_1680772821520.jpg',
+    //   content: 'qwer',
+    // }
 
     try {
-      await queryRunner.manager.getRepository(Posts).save({
+      const post = await queryRunner.manager.getRepository(Posts).save({
         userId: user.id,
         content: postData.content,
       });
 
-      const newPost = await queryRunner.manager
+      if (postData.image) {
+        if (Array.isArray(postData.image)) {
+          const images = await Promise.all(
+            postData.image.map(
+              async (i) =>
+                await queryRunner.manager.getRepository(Images).save({
+                  src: i,
+                  postId: post.id,
+                }),
+            ),
+          );
+        } else {
+          const image = await queryRunner.manager.getRepository(Images).save({
+            src: postData.image,
+            postId: post.id,
+          });
+        }
+      }
+
+      const fullPost = await queryRunner.manager
         .getRepository(Posts)
         .createQueryBuilder('posts')
         .leftJoinAndSelect('posts.Comments', 'Comments')
@@ -127,7 +149,7 @@ export class PostsService {
         .getOne();
 
       await queryRunner.commitTransaction();
-      return newPost;
+      return fullPost;
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {

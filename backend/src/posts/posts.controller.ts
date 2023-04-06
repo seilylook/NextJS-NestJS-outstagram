@@ -7,15 +7,13 @@ import {
   Patch,
   Delete,
   UseInterceptors,
-  UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
 import { User } from '../common/decoratos/user.decorator';
 import { PostsService } from './posts.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { FormDataRequest } from 'nestjs-form-data';
 import { FormDataTestDto } from '../common/dto/FormDataTestDto';
-import * as multer from 'multer';
-import * as path from 'path';
 
 // --- mainPosts---
 // mainPosts: [
@@ -60,19 +58,6 @@ import * as path from 'path';
 @Controller('posts')
 export class PostsController {
   constructor(private postsService: PostsService) {}
-  upload = multer({
-    storage: multer.diskStorage({
-      destination(req, file, done) {
-        done(null, 'uploads');
-      },
-      filename(req, file, done) {
-        const ext = path.extname(file.originalname);
-        const basename = path.basename(file.originalname, ext);
-        done(null, basename + '_' + new Date().getTime() + ext); // 제로초15184712891.png
-      },
-    }),
-    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
-  });
 
   // 모든 게시물 가져오기
   @Get('/')
@@ -83,7 +68,9 @@ export class PostsController {
   // 게시글 작성
   @Post('/')
   @FormDataRequest()
-  async addPost(@User() user, @Body() body: FormDataTestDto) {
+  async addPost(@User() user, @Body() body) {
+    // console.log(body);
+    // { image: '29KBYK3JT0_1_1680772821520.jpg', content: 'qwer' }
     return await this.postsService.addPost(user, body);
   }
 
@@ -113,8 +100,8 @@ export class PostsController {
 
   // 사진 게시물 작성
   @Post('/images')
-  @UseInterceptors(FileInterceptor('image'))
-  async uploadImage(@UploadedFile() file) {
-    console.log(file.filename);
+  @UseInterceptors(FilesInterceptor('image'))
+  async uploadImage(@UploadedFiles() files) {
+    return Object.assign(files.map((v) => v.filename));
   }
 }
