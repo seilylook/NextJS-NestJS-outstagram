@@ -24,19 +24,30 @@ const PostForm = () => {
 
   const onSubmit = useCallback(() => {
     if (!text || !text.trim()) {
-      return alert("게시물을 작성하세요.");
+      return alert("게시글을 작성하세요.");
     }
-    dispatch({
-      type: ADD_POST_REQUEST,
-      data: {
-        content: text,
-        image: imagePaths,
-      },
+    let formData = new FormData();
+
+    imagePaths.forEach((p) => {
+      formData.append("image", p);
     });
-  }, [dispatch, text, imagePaths]);
+    formData.append("content", text);
+
+    return dispatch({
+      type: ADD_POST_REQUEST,
+      data: formData,
+    });
+  }, [text, imagePaths, dispatch]);
 
   const onClickImageUpload = useCallback(() => {
     imageInput.current?.click();
+  }, []);
+
+  const onChangeImages = useCallback((e: HTMLImageElement) => {
+    const imageFormData = new FormData();
+    [].forEach.call(e.target.files, (f) => {
+      imageFormData.append("image", f);
+    });
   }, []);
 
   return (
@@ -59,6 +70,7 @@ const PostForm = () => {
           hidden
           ref={imageInput}
           style={{ display: "none" }}
+          onChange={() => onChangeImages}
         />
         <Button onClick={onClickImageUpload}>이미지 업로드</Button>
         <Button
@@ -71,9 +83,13 @@ const PostForm = () => {
         </Button>
       </div>
       <div>
-        {imagePaths.map((v) => (
+        {imagePaths.map((v, i) => (
           <div key={v} style={{ display: "inline-block" }}>
-            <img src={v} style={{ width: "200px" }} alt={v} />
+            <img
+              src={`http://localhost:3060/${v}`}
+              style={{ width: "200px" }}
+              alt={v}
+            />
             <div>
               <Button>제거</Button>
             </div>

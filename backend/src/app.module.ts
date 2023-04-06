@@ -17,6 +17,7 @@ import { Comments } from './entities/Comments';
 import { Images } from './entities/Images';
 import { Hashtags } from './entities/Hashtags';
 import { Follow } from './entities/Follow';
+import { NestjsFormDataModule } from 'nestjs-form-data';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { Follow } from './entities/Follow';
       Hashtags,
       Follow,
     ]),
+    NestjsFormDataModule,
   ],
   controllers: [AppController, UsersController, PostsController],
   providers: [AppService, UsersService, PostsService],

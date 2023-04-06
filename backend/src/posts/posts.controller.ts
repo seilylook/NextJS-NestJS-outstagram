@@ -6,9 +6,14 @@ import {
   Param,
   Patch,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { User } from '../common/decoratos/user.decorator';
 import { PostsService } from './posts.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FormDataRequest } from 'nestjs-form-data';
+import { FormDataTestDto } from '../common/dto/FormDataTestDto';
 
 // --- mainPosts---
 // mainPosts: [
@@ -60,9 +65,16 @@ export class PostsController {
     return await this.postsService.loadAllPosts();
   }
 
+  @Post('/images')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadImage(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+  }
+
   // 게시글 작성
   @Post('/')
-  async addPost(@User() user, @Body() body) {
+  @FormDataRequest()
+  async addPost(@User() user, @Body() body: FormDataTestDto) {
     return await this.postsService.addPost(user, body);
   }
 
