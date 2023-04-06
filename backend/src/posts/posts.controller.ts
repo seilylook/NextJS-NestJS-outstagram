@@ -14,6 +14,8 @@ import { PostsService } from './posts.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FormDataRequest } from 'nestjs-form-data';
 import { FormDataTestDto } from '../common/dto/FormDataTestDto';
+import * as multer from 'multer';
+import * as path from 'path';
 
 // --- mainPosts---
 // mainPosts: [
@@ -58,17 +60,24 @@ import { FormDataTestDto } from '../common/dto/FormDataTestDto';
 @Controller('posts')
 export class PostsController {
   constructor(private postsService: PostsService) {}
+  upload = multer({
+    storage: multer.diskStorage({
+      destination(req, file, done) {
+        done(null, 'uploads');
+      },
+      filename(req, file, done) {
+        const ext = path.extname(file.originalname);
+        const basename = path.basename(file.originalname, ext);
+        done(null, basename + '_' + new Date().getTime() + ext); // 제로초15184712891.png
+      },
+    }),
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
+  });
 
   // 모든 게시물 가져오기
   @Get('/')
   async loadAllPosts() {
     return await this.postsService.loadAllPosts();
-  }
-
-  @Post('/images')
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadImage(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
   }
 
   // 게시글 작성
@@ -100,5 +109,12 @@ export class PostsController {
   @Delete(':id/like')
   async unlike(@Param('id') id: number, @User() user) {
     return await this.postsService.unlike(id, user);
+  }
+
+  // 사진 게시물 작성
+  @Post('/images')
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadImage(@UploadedFile() file) {
+    console.log(file.filename);
   }
 }

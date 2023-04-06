@@ -1,9 +1,9 @@
-import { useCallback, useRef, useEffect } from "react";
+import { useCallback, useRef, useEffect, ChangeEvent } from "react";
 import useInput from "@/hooks/useInput";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootReducerState } from "@/reducers";
-import { ADD_POST_REQUEST } from "@/reducers/post";
+import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST } from "@/reducers/post";
 
 import { Form, Input, Button } from "antd";
 import { TwitterOutlined } from "@ant-design/icons";
@@ -14,7 +14,7 @@ const PostForm = () => {
     (state: RootReducerState) => state.post
   );
   const dispatch = useDispatch();
-  const imageInput = useRef<HTMLInputElement>(null);
+  const imageInput = useRef(null);
 
   useEffect(() => {
     if (addPostDone) {
@@ -26,7 +26,7 @@ const PostForm = () => {
     if (!text || !text.trim()) {
       return alert("게시글을 작성하세요.");
     }
-    let formData = new FormData();
+    const formData = new FormData();
 
     imagePaths.forEach((p) => {
       formData.append("image", p);
@@ -40,15 +40,23 @@ const PostForm = () => {
   }, [text, imagePaths, dispatch]);
 
   const onClickImageUpload = useCallback(() => {
-    imageInput.current?.click();
+    imageInput.current.click();
   }, []);
 
-  const onChangeImages = useCallback((e: HTMLImageElement) => {
-    const imageFormData = new FormData();
-    [].forEach.call(e.target.files, (f) => {
-      imageFormData.append("image", f);
-    });
-  }, []);
+  const onChangeImages = useCallback(
+    (e: ChangeEvent) => {
+      console.log("images", e.target.files);
+      const imageFormData = new FormData();
+      [].forEach.call(e.target.files, (f) => {
+        imageFormData.append("image", f);
+      });
+      dispatch({
+        type: UPLOAD_IMAGES_REQUEST,
+        data: imageFormData,
+      });
+    },
+    [dispatch]
+  );
 
   return (
     <Form
@@ -70,7 +78,7 @@ const PostForm = () => {
           hidden
           ref={imageInput}
           style={{ display: "none" }}
-          onChange={() => onChangeImages}
+          onChange={onChangeImages}
         />
         <Button onClick={onClickImageUpload}>이미지 업로드</Button>
         <Button

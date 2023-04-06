@@ -18,6 +18,8 @@ import { Images } from './entities/Images';
 import { Hashtags } from './entities/Hashtags';
 import { Follow } from './entities/Follow';
 import { NestjsFormDataModule } from 'nestjs-form-data';
+import { MulterModule } from '@nestjs/platform-express';
+import { multerOptionsFactory } from './common/utils/multer.options.factory';
 
 @Module({
   imports: [
@@ -39,6 +41,9 @@ import { NestjsFormDataModule } from 'nestjs-form-data';
       Follow,
     ]),
     NestjsFormDataModule,
+    MulterModule.registerAsync({
+      useFactory: multerOptionsFactory,
+    }),
   ],
   controllers: [AppController, UsersController, PostsController],
   providers: [AppService, UsersService, PostsService],
