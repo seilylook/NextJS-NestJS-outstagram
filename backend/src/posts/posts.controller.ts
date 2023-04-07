@@ -68,7 +68,7 @@ export class PostsController {
   // 게시글 작성
   @Post('/')
   @FormDataRequest()
-  async addPost(@User() user, @Body() body) {
+  async addPost(@User() user, @Body() body: FormDataTestDto) {
     // console.log(body);
     // { image: '29KBYK3JT0_1_1680772821520.jpg', content: 'qwer' }
     return await this.postsService.addPost(user, body);
@@ -94,8 +94,8 @@ export class PostsController {
 
   // 좋아요 취소
   @Delete(':id/like')
-  async unlike(@Param('id') id: number, @User() user) {
-    return await this.postsService.unlike(id, user);
+  async unlike(@Param('id') id: number) {
+    return await this.postsService.unlike(id);
   }
 
   // 사진 게시물 작성

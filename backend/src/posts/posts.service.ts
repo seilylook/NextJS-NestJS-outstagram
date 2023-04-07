@@ -1,4 +1,4 @@
-import { Injectable, Post } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 
@@ -140,7 +140,7 @@ export class PostsService {
 
       if (postData.image) {
         if (Array.isArray(postData.image)) {
-          const images = await Promise.all(
+          await Promise.all(
             postData.image.map(
               async (i) =>
                 await queryRunner.manager.getRepository(Images).save({
@@ -150,7 +150,7 @@ export class PostsService {
             ),
           );
         } else {
-          const image = await queryRunner.manager.getRepository(Images).save({
+          await queryRunner.manager.getRepository(Images).save({
             src: postData.image,
             postId: post.id,
           });
@@ -314,7 +314,7 @@ export class PostsService {
     }
   }
 
-  async unlike(postId, user) {
+  async unlike(postId) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();

@@ -108,7 +108,6 @@ function removePostAPI(data) {
 function* removePost(action) {
   try {
     const result = yield call(removePostAPI, action.data);
-    console.log(result.data);
     yield put({
       type: REMOVE_POST_SUCCESS,
       data: result.data,
@@ -174,7 +173,6 @@ function uploadImagesAPI(data) {
 function* uploadImages(action) {
   try {
     const result = yield call(uploadImagesAPI, action.data);
-    console.log(result.data);
 
     yield put({
       type: UPLOAD_IMAGES_SUCCESS,
