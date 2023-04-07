@@ -20,6 +20,7 @@ import { Follow } from './entities/Follow';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerOptionsFactory } from './common/utils/multer.options.factory';
+import { Posthashtag } from './entities/Posthashtag';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { multerOptionsFactory } from './common/utils/multer.options.factory';
       Images,
       Hashtags,
       Follow,
+      Posthashtag,
     ]),
     NestjsFormDataModule,
     MulterModule.registerAsync({

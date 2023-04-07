@@ -7,6 +7,8 @@ import { Posts } from '../entities/Posts';
 import { Comments } from '../entities/Comments';
 import { Like } from '../entities/Like';
 import { Images } from '../entities/Images';
+import { Hashtags } from '../entities/Hashtags';
+import { Posthashtag } from '../entities/Posthashtag';
 
 // --- mainPosts---
 // mainPosts: [
@@ -103,11 +105,38 @@ export class PostsService {
     //   content: 'qwer',
     // }
 
+    // console.log(postData);
+    // { content: '#React #Nestjs #Unity #TypeORM' }
+
     try {
+      const hashtags = postData.content.match(/#[^\s#]+/g);
+      // console.log(hashtags);
+      // [ '#React', '#Nestjs', '#Unity', '#TypeORM' ]
+
       const post = await queryRunner.manager.getRepository(Posts).save({
         userId: user.id,
         content: postData.content,
       });
+
+      if (hashtags) {
+        const newHashtags = await Promise.all(
+          hashtags.map(
+            async (tag) =>
+              await queryRunner.manager.getRepository(Hashtags).save({
+                name: tag.slice(1).toLowerCase(),
+              }),
+          ),
+        );
+        await Promise.all(
+          newHashtags.map(
+            async (tag) =>
+              await queryRunner.manager.getRepository(Posthashtag).save({
+                postId: post.id,
+                hashtagId: tag.id,
+              }),
+          ),
+        );
+      }
 
       if (postData.image) {
         if (Array.isArray(postData.image)) {
