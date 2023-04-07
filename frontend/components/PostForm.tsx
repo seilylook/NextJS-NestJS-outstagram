@@ -91,7 +91,7 @@ const PostForm = () => {
         </Button>
       </div>
       <div>
-        {imagePaths.map((v) => (
+        {imagePaths.map((v, i) => (
           <div key={v} style={{ display: "inline-block" }}>
             <img
               src={`http://localhost:3060/${v}`}
