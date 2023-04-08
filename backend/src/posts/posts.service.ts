@@ -429,7 +429,7 @@ export class PostsService {
         .leftJoinAndSelect('RetwittComments.User', 'RetwittCommentsUser')
         .leftJoinAndSelect('Post.Comments', 'Comments')
         .leftJoinAndSelect('Comments.User', 'commentsUser')
-        .where('Post.id = :id', { id: reTwitt.retweetId })
+        .where('Post.id = :id', { id: reTwitt.id })
         .select([
           'Post.id',
           'Post.content',
@@ -452,6 +452,8 @@ export class PostsService {
           'commentsUser.id',
           'commentsUser.nickname',
         ])
+        .orderBy('Post.createdAt', 'DESC')
+        .addOrderBy('Comments.createdAt', 'DESC')
         .getOne();
 
       console.log(reTwittwithExPost);
