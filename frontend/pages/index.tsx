@@ -14,9 +14,14 @@ import PostCard from "@/components/PostCard";
 const Home = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state: RootReducerState) => state.user);
-  const { mainPosts, loadPostsLoading, hadMorePosts } = useSelector(
-    (state: RootReducerState) => state.post
-  );
+  const { mainPosts, loadPostsLoading, hadMorePosts, retwittError } =
+    useSelector((state: RootReducerState) => state.post);
+
+  useEffect(() => {
+    if (retwittError) {
+      alert("해당 게시물을 리트윗 할 수 없습니다.");
+    }
+  }, [retwittError]);
 
   useEffect(() => {
     dispatch({

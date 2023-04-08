@@ -61,29 +61,43 @@ export class PostsService {
     try {
       const allPosts = await queryRunner.manager
         .getRepository(Posts)
-        .createQueryBuilder('posts')
-        .leftJoinAndSelect('posts.Images', 'Images')
-        .leftJoinAndSelect('posts.User', 'User')
-        .leftJoinAndSelect('posts.Likes', 'Likes')
-        .leftJoinAndSelect('posts.Posthashtags', 'Posthashtags')
-        .leftJoinAndSelect('posts.Retweet', 'Retweet')
-        .leftJoinAndSelect('posts.Comments', 'Comments')
+        .createQueryBuilder('Post')
+        .leftJoinAndSelect('Post.User', 'User')
+        .leftJoinAndSelect('Post.Images', 'Images')
+        .leftJoinAndSelect('Post.Likes', 'Likes')
+        .leftJoinAndSelect('Post.Posthashtags', 'Posthashtags')
+        .leftJoinAndSelect('Post.Retweet', 'Retwitt')
+        .leftJoinAndSelect('Retwitt.User', 'RetwittUser')
+        .leftJoinAndSelect('Retwitt.Images', 'RetwittImages')
+        .leftJoinAndSelect('Retwitt.Likes', 'RetwittLikes')
+        .leftJoinAndSelect('Retwitt.Posthashtags', 'RetwittPosthashtags')
+        .leftJoinAndSelect('Retwitt.Comments', 'RetwittComments')
+        .leftJoinAndSelect('RetwittComments.User', 'RetwittCommentsUser')
+        .leftJoinAndSelect('Post.Comments', 'Comments')
         .leftJoinAndSelect('Comments.User', 'commentsUser')
         .select([
-          'posts.id',
-          'posts.content',
+          'Post.id',
+          'Post.content',
           'User.id',
           'User.nickname',
           'Images',
           'Likes.userId',
           'Likes.postId',
           'Posthashtags',
-          'Retweet',
+          'Retwitt',
+          'RetwittUser.id',
+          'RetwittUser.nickname',
+          'RetwittImages',
+          'RetwittLikes',
+          'RetwittPosthashtags',
+          'RetwittComments',
+          'RetwittCommentsUser.id',
+          'RetwittCommentsUser.nickname',
           'Comments',
           'commentsUser.id',
           'commentsUser.nickname',
         ])
-        .orderBy('posts.createdAt', 'DESC')
+        .orderBy('Post.createdAt', 'DESC')
         .addOrderBy('Comments.createdAt', 'DESC')
         .getMany();
 
@@ -159,22 +173,22 @@ export class PostsService {
 
       const fullPost = await queryRunner.manager
         .getRepository(Posts)
-        .createQueryBuilder('posts')
-        .leftJoinAndSelect('posts.Comments', 'Comments')
-        .leftJoinAndSelect('posts.Images', 'Images')
-        .leftJoinAndSelect('posts.User', 'user')
-        .leftJoinAndSelect('posts.Likes', 'Likes')
-        .where('posts.userId = :id', { id: user.id })
+        .createQueryBuilder('Post')
+        .leftJoinAndSelect('Post.Comments', 'Comments')
+        .leftJoinAndSelect('Post.Images', 'Images')
+        .leftJoinAndSelect('Post.User', 'user')
+        .leftJoinAndSelect('Post.Likes', 'Likes')
+        .where('Post.userId = :id', { id: user.id })
         .select([
-          'posts.id',
-          'posts.content',
+          'Post.id',
+          'Post.content',
           'user.id',
           'user.nickname',
           'Likes',
           'Comments',
           'Images',
         ])
-        .orderBy('posts.createdAt', 'DESC')
+        .orderBy('Post.createdAt', 'DESC')
         .getOne();
 
       await queryRunner.commitTransaction();
@@ -346,6 +360,103 @@ export class PostsService {
 
       await queryRunner.commitTransaction();
       return like;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async reTwitt(postId: number, userId: number) {
+    // console.log('리트윗할 게시물 id', postId);
+    // console.log('사용자 정보', userId);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const post = await queryRunner.manager
+        .getRepository(Posts)
+        .createQueryBuilder('Post')
+        .leftJoinAndSelect('Post.Retweet', 'Retwitt')
+        .where('Post.id = :id', { id: postId })
+        .select(['Post', 'Retwitt'])
+        .getOne();
+
+      if (!post) {
+        return null;
+      }
+
+      if (
+        userId === post.userId ||
+        (post.Retweet && post.Retweet.userId === userId)
+      ) {
+        return null;
+      }
+
+      const retwittTargetId = post.retweetId || post.id;
+      const exPost = await queryRunner.manager
+        .getRepository(Posts)
+        .createQueryBuilder('Post')
+        .where('Post.userId = :id', { id: userId })
+        .andWhere('Post.retweetId = :id', { id: retwittTargetId })
+        .getOne();
+
+      if (exPost) {
+        console.log('이미 리트윗한 게시물');
+        return null;
+      }
+
+      const reTwitt = await queryRunner.manager.getRepository(Posts).save({
+        userId: userId,
+        retweetId: retwittTargetId,
+        content: 'reTwitt',
+      });
+
+      const reTwittwithExPost = await queryRunner.manager
+        .getRepository(Posts)
+        .createQueryBuilder('Post')
+        .leftJoinAndSelect('Post.User', 'User')
+        .leftJoinAndSelect('Post.Images', 'Images')
+        .leftJoinAndSelect('Post.Likes', 'Likes')
+        .leftJoinAndSelect('Post.Posthashtags', 'Posthashtags')
+        .leftJoinAndSelect('Post.Retweet', 'Retwitt')
+        .leftJoinAndSelect('Retwitt.User', 'RetwittUser')
+        .leftJoinAndSelect('Retwitt.Images', 'RetwittImages')
+        .leftJoinAndSelect('Retwitt.Likes', 'RetwittLikes')
+        .leftJoinAndSelect('Retwitt.Posthashtags', 'RetwittPosthashtags')
+        .leftJoinAndSelect('Retwitt.Comments', 'RetwittComments')
+        .leftJoinAndSelect('RetwittComments.User', 'RetwittCommentsUser')
+        .leftJoinAndSelect('Post.Comments', 'Comments')
+        .leftJoinAndSelect('Comments.User', 'commentsUser')
+        .where('Post.id = :id', { id: reTwitt.retweetId })
+        .select([
+          'Post.id',
+          'Post.content',
+          'User.id',
+          'User.nickname',
+          'Images',
+          'Likes.userId',
+          'Likes.postId',
+          'Posthashtags',
+          'Retwitt',
+          'RetwittUser.id',
+          'RetwittUser.nickname',
+          'RetwittImages',
+          'RetwittLikes',
+          'RetwittPosthashtags',
+          'RetwittComments',
+          'RetwittCommentsUser.id',
+          'RetwittCommentsUser.nickname',
+          'Comments',
+          'commentsUser.id',
+          'commentsUser.nickname',
+        ])
+        .getOne();
+
+      console.log(reTwittwithExPost);
+      await queryRunner.commitTransaction();
+      return reTwittwithExPost;
     } catch (error) {
       await queryRunner.rollbackTransaction();
     } finally {

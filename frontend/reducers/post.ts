@@ -47,6 +47,10 @@ export const initialState = {
   uploadImagesDone: false,
   uploadImagesError: null,
 
+  retwittLoading: false, // 리트윗 시도 중
+  retwittDone: false,
+  retwittError: null,
+
   hadMorePosts: true,
   mainPosts: [],
   imagePaths: [],
@@ -81,6 +85,10 @@ export const UNLIKE_POST_FAILURE = "UNLIKE_POST_FAILURE";
 export const UPLOAD_IMAGES_REQUEST = "UPLOAD_IMAGES_REQUEST";
 export const UPLOAD_IMAGES_SUCCESS = "UPLOAD_IMAGES_SUCCESS";
 export const UPLOAD_IMAGES_FAILURE = "UPLOAD_IMAGES_FAILURE";
+
+export const RETWITT_REQUEST = "RETWIT_REQUEST";
+export const RETWITT_SUCCESS = "RETWIT_SUCCESS";
+export const RETWITT_FAILURE = "RETWIT_FAILURE";
 
 const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
   produce(state, (draft) => {
@@ -212,6 +220,23 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
       case UPLOAD_IMAGES_FAILURE:
         draft.uploadImagesLoading = false;
         draft.uploadImagesError = action.error;
+        break;
+
+      case RETWITT_REQUEST:
+        draft.retwittLoading = true;
+        draft.retwittDone = false;
+        draft.retwittError = null;
+        break;
+
+      case RETWITT_SUCCESS:
+        draft.retwittLoading = false;
+        draft.retwittDone = true;
+        draft.mainPosts.unshift(action.data);
+        break;
+
+      case RETWITT_FAILURE:
+        draft.retwittLoading = false;
+        draft.retwittError = action.error;
         break;
 
       default:

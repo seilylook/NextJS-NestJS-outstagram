@@ -104,4 +104,12 @@ export class PostsController {
   async uploadImage(@UploadedFiles() files) {
     return Object.assign(files.map((v) => v.filename));
   }
+
+  // 리트윗하기
+  @Post(':id/retwitt')
+  async reTwitt(@Param('id') id: number, @User() user) {
+    // console.log('리트윗할 게시물 id', id);
+    // console.log('사용자 정보', user);
+    return await this.postsService.reTwitt(id, user.id);
+  }
 }
