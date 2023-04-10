@@ -51,6 +51,10 @@ export const initialState = {
   retwittDone: false,
   retwittError: null,
 
+  // loadHashtagPostsLoading: false, // 해시태그 로드 시도 중
+  // loadHashtagPostsDone: false,
+  // loadHashtagPostsError: null,
+
   hadMorePosts: true,
   mainPosts: [],
   imagePaths: [],
@@ -90,16 +94,22 @@ export const RETWITT_REQUEST = "RETWIT_REQUEST";
 export const RETWITT_SUCCESS = "RETWIT_SUCCESS";
 export const RETWITT_FAILURE = "RETWIT_FAILURE";
 
+export const LOAD_HASHTAG_POSTS_REQUEST = "LOAD_HASHTAGS_REQUEST";
+export const LOAD_HASHTAG_POSTS_SUCCESS = "LOAD_HASHTAGS_SUCCESS";
+export const LOAD_HASHTAG_POSTS_FAILURE = "LOAD_HASHTAGS_FAILURE";
+
 const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
   produce(state, (draft) => {
     switch (action.type) {
       case LOAD_POSTS_REQUEST:
+      case LOAD_HASHTAG_POSTS_REQUEST:
         draft.loadPostsLoading = true;
         draft.loadPostsDone = false;
         draft.loadPostsError = null;
         break;
 
       case LOAD_POSTS_SUCCESS:
+      case LOAD_HASHTAG_POSTS_SUCCESS:
         draft.loadPostsLoading = false;
         draft.loadPostsDone = true;
         draft.mainPosts = draft.mainPosts.concat(action.data);
@@ -107,6 +117,7 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
         break;
 
       case LOAD_POSTS_FAILURE:
+      case LOAD_HASHTAG_POSTS_FAILURE:
         draft.loadPostsLoading = false;
         draft.loadPostsError = action.error;
         break;

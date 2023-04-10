@@ -33,6 +33,9 @@ import {
   RETWITT_REQUEST,
   RETWITT_SUCCESS,
   RETWITT_FAILURE,
+  LOAD_HASHTAG_POSTS_REQUEST,
+  LOAD_HASHTAG_POSTS_SUCCESS,
+  LOAD_HASHTAG_POSTS_FAILURE,
 } from "@/reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "@/reducers/user";
 import shortId from "shortid";
@@ -54,6 +57,29 @@ function* loadPosts(action) {
     yield put({
       type: LOAD_POSTS_FAILURE,
       error: err.response.data,
+    });
+  }
+}
+
+function loadHashtagPostsAPI(data, lastId) {
+  return axios.get(
+    `/posts/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`
+  );
+}
+
+function* loadHashtagPosts(action) {
+  try {
+    const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
+
+    yield put({
+      type: LOAD_HASHTAG_POSTS_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_HASHTAG_POSTS_FAILURE,
+      data: err.response.data,
     });
   }
 }
@@ -244,6 +270,10 @@ function* watchReTwitt() {
   yield takeLatest(RETWITT_REQUEST, ReTwitt);
 }
 
+function* watchLoadHashtagPosts() {
+  yield takeLatest(LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
@@ -254,5 +284,6 @@ export default function* postSaga() {
     fork(watchUnlikePost),
     fork(watchUploadImages),
     fork(watchReTwitt),
+    fork(watchLoadHashtagPosts),
   ]);
 }
