@@ -53,12 +53,64 @@ export class PostsService {
     private dataSource: DataSource,
   ) {}
 
-  async loadAllPosts() {
+  async loadAllPosts(lastId) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
+      // 처음 로딩이 아닐 때
+      // lastId === '가장 마지막 게시물 id'
+      if (lastId !== '0') {
+        const allPosts = await queryRunner.manager
+          .getRepository(Posts)
+          .createQueryBuilder('Post')
+          .leftJoinAndSelect('Post.User', 'User')
+          .leftJoinAndSelect('Post.Images', 'Images')
+          .leftJoinAndSelect('Post.Likes', 'Likes')
+          .leftJoinAndSelect('Post.Posthashtags', 'Posthashtags')
+          .leftJoinAndSelect('Post.Retweet', 'Retwitt')
+          .leftJoinAndSelect('Retwitt.User', 'RetwittUser')
+          .leftJoinAndSelect('Retwitt.Images', 'RetwittImages')
+          .leftJoinAndSelect('Retwitt.Likes', 'RetwittLikes')
+          .leftJoinAndSelect('Retwitt.Posthashtags', 'RetwittPosthashtags')
+          .leftJoinAndSelect('Retwitt.Comments', 'RetwittComments')
+          .leftJoinAndSelect('RetwittComments.User', 'RetwittCommentsUser')
+          .leftJoinAndSelect('Post.Comments', 'Comments')
+          .leftJoinAndSelect('Comments.User', 'commentsUser')
+          .select([
+            'Post.id',
+            'Post.content',
+            'User.id',
+            'User.nickname',
+            'Images',
+            'Likes.userId',
+            'Likes.postId',
+            'Posthashtags',
+            'Retwitt',
+            'RetwittUser.id',
+            'RetwittUser.nickname',
+            'RetwittImages',
+            'RetwittLikes',
+            'RetwittPosthashtags',
+            'RetwittComments',
+            'RetwittCommentsUser.id',
+            'RetwittCommentsUser.nickname',
+            'Comments',
+            'commentsUser.id',
+            'commentsUser.nickname',
+          ])
+          .orderBy('Post.createdAt', 'DESC')
+          .addOrderBy('Comments.createdAt', 'DESC')
+          .where('Post.id < :lastId', { lastId: lastId })
+          .limit(10)
+          .getMany();
+
+        return allPosts;
+      }
+
+      // 처음 로딩할 때
+      // lastId === '0'
       const allPosts = await queryRunner.manager
         .getRepository(Posts)
         .createQueryBuilder('Post')
@@ -99,6 +151,7 @@ export class PostsService {
         ])
         .orderBy('Post.createdAt', 'DESC')
         .addOrderBy('Comments.createdAt', 'DESC')
+        .limit(10)
         .getMany();
 
       await queryRunner.commitTransaction();

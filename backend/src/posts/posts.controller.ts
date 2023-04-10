@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFiles,
+  Query,
 } from '@nestjs/common';
 import { User } from '../common/decoratos/user.decorator';
 import { PostsService } from './posts.service';
@@ -61,8 +62,10 @@ export class PostsController {
 
   // 모든 게시물 가져오기
   @Get('/')
-  async loadAllPosts() {
-    return await this.postsService.loadAllPosts();
+  async loadAllPosts(@Query() query) {
+    // console.log(query);
+    // { lastId: '0' }
+    return await this.postsService.loadAllPosts(query.lastId);
   }
 
   // 게시글 작성
