@@ -53,15 +53,15 @@ export class PostsService {
     private dataSource: DataSource,
   ) {}
 
-  async loadAllPosts(lastId) {
+  async loadAllPosts(lastId: number) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
       // 처음 로딩이 아닐 때
-      // lastId === '가장 마지막 게시물 id'
-      if (lastId !== '0') {
+      // lastId === 가장 마지막 게시물 id: number
+      if (lastId) {
         const allPosts = await queryRunner.manager
           .getRepository(Posts)
           .createQueryBuilder('Post')
@@ -102,7 +102,7 @@ export class PostsService {
           ])
           .orderBy('Post.createdAt', 'DESC')
           .addOrderBy('Comments.createdAt', 'DESC')
-          .where('Post.id < :lastId', { lastId: lastId })
+          .where('Post.id < :id', { id: lastId })
           .limit(10)
           .getMany();
 
@@ -110,7 +110,7 @@ export class PostsService {
       }
 
       // 처음 로딩할 때
-      // lastId === '0'
+      // lastId === 0
       const allPosts = await queryRunner.manager
         .getRepository(Posts)
         .createQueryBuilder('Post')

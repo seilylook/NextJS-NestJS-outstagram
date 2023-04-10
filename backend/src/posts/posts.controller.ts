@@ -65,7 +65,8 @@ export class PostsController {
   async loadAllPosts(@Query() query) {
     // console.log(query);
     // { lastId: '0' }
-    return await this.postsService.loadAllPosts(query.lastId);
+    const lastId = parseInt(query.lastId, 10);
+    return await this.postsService.loadAllPosts(lastId);
   }
 
   // 게시글 작성
