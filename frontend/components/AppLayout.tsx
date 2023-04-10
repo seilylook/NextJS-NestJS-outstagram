@@ -5,7 +5,12 @@ import Link from "next/link";
 
 import { Menu, Input, Row, Col } from "antd";
 import styled from "styled-components";
-import { SendOutlined, UserOutlined, UserAddOutlined } from "@ant-design/icons";
+import {
+  SendOutlined,
+  UserOutlined,
+  UserAddOutlined,
+  GithubOutlined,
+} from "@ant-design/icons";
 
 import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
@@ -44,6 +49,7 @@ const AppLayout = ({ children }: ChildrenProp) => {
           <Menu.Item>
             <SendOutlined />
           </Menu.Item>
+          <Menu.Item>번역</Menu.Item>
         </Menu>
         <Row gutter={8}>
           <Col xs={24} md={6}>
@@ -53,13 +59,13 @@ const AppLayout = ({ children }: ChildrenProp) => {
             {children}
           </Col>
           <Col xs={24} md={6}>
-            <a
+            <Link
               href="https://github.com/seilylook"
               target="_blank"
               rel="noreferrer noopener"
             >
-              Made By seilylook
-            </a>
+              <GithubOutlined />
+            </Link>
           </Col>
         </Row>
       </div>
