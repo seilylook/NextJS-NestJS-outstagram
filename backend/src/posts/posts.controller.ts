@@ -69,13 +69,6 @@ export class PostsController {
     return await this.postsService.loadAllPosts(lastId);
   }
 
-  // 해시태그 가져오기
-  @Get('/hashtag')
-  async loadHashtagPosts(@Param('tag') tag: string, @Query() query) {
-    console.log('해시태그 내용', tag);
-    console.log('lastId', query.lastId);
-  }
-
   // 게시글 작성
   @Post('/')
   @FormDataRequest()

@@ -5,6 +5,7 @@ import * as passport from 'passport';
 import * as session from 'express-session';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { urlencoded } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -13,6 +14,7 @@ async function bootstrap() {
     credentials: true,
     optionsSuccessStatus: 200,
   });
+  app.use(urlencoded({ extended: true }));
   app.useStaticAssets(join(__dirname, '../..', 'uploads'));
   app.use(cookieParser());
   app.use(

@@ -15,6 +15,7 @@ const Hashtags = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { tag } = router.query;
+  console.log(tag);
 
   useEffect(() => {
     if (hadMorePosts && !loadPostsLoading) {

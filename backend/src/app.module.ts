@@ -3,9 +3,10 @@ import { AppController } from './app.controller';
 import { ConfigModule } from '@nestjs/config';
 import { AppService } from './app.service';
 import { PostsModule } from './posts/posts.module';
+import { HashtagsModule } from './hashtags/hashtags.module';
+import { UsersModule } from './users/users.module';
 import { PostsController } from './posts/posts.controller';
 import { PostsService } from './posts/posts.service';
-import { UsersModule } from './users/users.module';
 import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -21,6 +22,8 @@ import { NestjsFormDataModule } from 'nestjs-form-data';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerOptionsFactory } from './common/utils/multer.options.factory';
 import { Posthashtag } from './entities/Posthashtag';
+import { HashtagsController } from './hashtags/hashtags.controller';
+import { HashtagsService } from './hashtags/hashtags.service';
 
 @Module({
   imports: [
@@ -30,6 +33,7 @@ import { Posthashtag } from './entities/Posthashtag';
     UsersModule,
     PostsModule,
     AuthModule,
+    HashtagsModule,
     Users,
     Posts,
     TypeOrmModule.forRoot(ormconfig),
@@ -47,7 +51,12 @@ import { Posthashtag } from './entities/Posthashtag';
       useFactory: multerOptionsFactory,
     }),
   ],
-  controllers: [AppController, UsersController, PostsController],
-  providers: [AppService, UsersService, PostsService],
+  controllers: [
+    AppController,
+    UsersController,
+    PostsController,
+    HashtagsController,
+  ],
+  providers: [AppService, UsersService, PostsService, HashtagsService],
 })
 export class AppModule {}
