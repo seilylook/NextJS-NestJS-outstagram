@@ -1,13 +1,15 @@
 import { useEffect } from "react";
-import AppLayout from "@/components/AppLayout";
-import { useSelector } from "react-redux";
 import { RootReducerState } from "@/reducers";
-import { useDispatch } from "react-redux";
+import wrapper from "@/store/configureStore";
+import { useSelector, useDispatch } from "react-redux";
 import { LOAD_POSTS_REQUEST } from "@/reducers/post";
 import { LOAD_USER_INFO_REQUEST } from "@/reducers/user";
+import { END } from "redux-saga";
+import axios from "axios";
 
 import Head from "next/head";
 
+import AppLayout from "@/components/AppLayout";
 import PostForm from "@/components/PostForm";
 import PostCard from "@/components/PostCard";
 
@@ -22,15 +24,6 @@ const Home = () => {
       alert("해당 게시물을 리트윗 할 수 없습니다.");
     }
   }, [retwittError]);
-
-  useEffect(() => {
-    dispatch({
-      type: LOAD_USER_INFO_REQUEST,
-    });
-    dispatch({
-      type: LOAD_POSTS_REQUEST,
-    });
-  }, [dispatch]);
 
   useEffect(() => {
     function onScroll() {
@@ -68,5 +61,25 @@ const Home = () => {
     </>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ req }) => {
+      const cookie = req ? req.headers.cookie : "";
+      axios.defaults.headers.Cookie = "";
+
+      if (req && cookie) {
+        axios.defaults.headers.Cookie = cookie;
+      }
+      store.dispatch({
+        type: LOAD_USER_INFO_REQUEST,
+      });
+      store.dispatch({
+        type: LOAD_POSTS_REQUEST,
+      });
+      store.dispatch(END);
+      await store.sagaTask.toPromise();
+    }
+);
 
 export default Home;

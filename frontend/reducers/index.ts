@@ -8,18 +8,19 @@ export interface RootReducerState {
   post: PostReducerState;
 }
 
-const rootReducer = combineReducers({
-  index: (state = {}, action) => {
-    switch (action.type) {
-      case HYDRATE:
-        return { ...state, ...action.payload };
+const rootReducer = (state, action) => {
+  switch (action.type) {
+    case HYDRATE:
+      return action.payload;
 
-      default:
-        return state;
+    default: {
+      const combineReducer = combineReducers({
+        user,
+        post,
+      });
+      return combineReducer(state, action);
     }
-  },
-  user,
-  post,
-});
+  }
+};
 
 export default rootReducer;
