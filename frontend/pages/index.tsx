@@ -3,7 +3,11 @@ import { RootReducerState } from "@/reducers";
 import wrapper from "@/store/configureStore";
 import { useSelector, useDispatch } from "react-redux";
 import { LOAD_POSTS_REQUEST } from "@/reducers/post";
-import { LOAD_USER_INFO_REQUEST } from "@/reducers/user";
+import {
+  LOAD_MY_INFO_REQUEST,
+  LOAD_MY_INFO_SUCCESS,
+  LOAD_USER_INFO_REQUEST,
+} from "@/reducers/user";
 import { END } from "redux-saga";
 import axios from "axios";
 
@@ -72,7 +76,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
         axios.defaults.headers.Cookie = cookie;
       }
       store.dispatch({
-        type: LOAD_USER_INFO_REQUEST,
+        type: LOAD_MY_INFO_REQUEST,
       });
       store.dispatch({
         type: LOAD_POSTS_REQUEST,

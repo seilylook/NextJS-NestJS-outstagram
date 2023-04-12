@@ -12,7 +12,7 @@ import {
   GithubOutlined,
 } from "@ant-design/icons";
 
-import UserProfile from "./UserProfile";
+import MyProfile from "./MyProfile";
 import LoginForm from "./LoginForm";
 
 type ChildrenProp = {
@@ -53,7 +53,7 @@ const AppLayout = ({ children }: ChildrenProp) => {
         </Menu>
         <Row gutter={8}>
           <Col xs={24} md={6}>
-            {me ? <UserProfile /> : <LoginForm />}
+            {me ? <MyProfile /> : <LoginForm />}
           </Col>
           <Col xs={24} md={12}>
             {children}

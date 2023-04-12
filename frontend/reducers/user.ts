@@ -3,7 +3,11 @@ import { AnyAction } from "redux";
 import { UserType } from "@/types/UserType";
 
 export const initialState = {
-  loadUserInfoLoading: false, // 사용자 정보 가져오기 시도 중
+  loadMyInfoLoading: false, // 사용자 정보 가져오기 시도 중
+  loadMyInfoDone: false,
+  loadMyInfoError: null,
+
+  loadUserInfoLoading: false,
   loadUserInfoDone: false,
   loadUserInfoError: null,
 
@@ -46,7 +50,12 @@ export const initialState = {
   signUpData: {},
   logInData: {},
   me: null,
+  userInfo: null,
 };
+
+export const LOAD_MY_INFO_REQUEST = "LOAD_USER_INFO_REQUEST";
+export const LOAD_MY_INFO_SUCCESS = "LOAD_USER_INFO_SUCCESS";
+export const LOAD_MY_INFO_FAILURE = "LOAD_USER_INFO_FAILURE";
 
 export const LOAD_USER_INFO_REQUEST = "LOAD_USER_INFO_REQUEST";
 export const LOAD_USER_INFO_SUCCESS = "LOAD_USER_INFO_SUCCESS";
@@ -96,6 +105,23 @@ export type UserReducerState = typeof initialState;
 const reducer = (state: UserReducerState, action: AnyAction) =>
   produce(state, (draft) => {
     switch (action.type) {
+      case LOAD_MY_INFO_REQUEST:
+        draft.loadMyInfoLoading = true;
+        draft.loadMyInfoDone = false;
+        draft.loadMyInfoError = null;
+        break;
+
+      case LOAD_MY_INFO_SUCCESS:
+        draft.loadMyInfoLoading = false;
+        draft.loadMyInfoDone = true;
+        draft.me = action.data;
+        break;
+
+      case LOAD_MY_INFO_FAILURE:
+        draft.loadMyInfoLoading = false;
+        draft.loadMyInfoError = action.error;
+        break;
+
       case LOAD_USER_INFO_REQUEST:
         draft.loadUserInfoLoading = true;
         draft.loadUserInfoDone = false;
@@ -105,7 +131,7 @@ const reducer = (state: UserReducerState, action: AnyAction) =>
       case LOAD_USER_INFO_SUCCESS:
         draft.loadUserInfoLoading = false;
         draft.loadUserInfoDone = true;
-        draft.me = action.data;
+        draft.userInfo = action.data;
         break;
 
       case LOAD_USER_INFO_FAILURE:

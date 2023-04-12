@@ -11,7 +11,7 @@ const ButtonWrapper = styled(Button)`
   margin-top: 10px;
 `;
 
-const UserProfile = () => {
+const MyProfile = () => {
   const { me, logOutLoading } = useSelector(
     (state: RootReducerState) => state.user
   );
@@ -54,4 +54,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default MyProfile;

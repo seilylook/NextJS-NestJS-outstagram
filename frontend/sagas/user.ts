@@ -1,5 +1,8 @@
 import { all, fork, takeLatest, put, call } from "redux-saga/effects";
 import {
+  LOAD_MY_INFO_REQUEST,
+  LOAD_MY_INFO_SUCCESS,
+  LOAD_MY_INFO_FAILURE,
   LOAD_USER_INFO_REQUEST,
   LOAD_USER_INFO_SUCCESS,
   LOAD_USER_INFO_FAILURE,
@@ -33,22 +36,22 @@ import {
 } from "../reducers/user";
 import axios from "axios";
 
-function loadUserInfoAPI() {
+function loadMyInfoAPI() {
   return axios.get("/users");
 }
 
-function* loadUserInfo(action) {
+function* loadMyInfo(action) {
   try {
-    const result = yield call(loadUserInfoAPI, action.data);
+    const result = yield call(loadMyInfoAPI, action.data);
 
     yield put({
-      type: LOAD_USER_INFO_SUCCESS,
+      type: LOAD_MY_INFO_SUCCESS,
       data: result.data,
     });
   } catch (err) {
     console.error(err);
     yield put({
-      type: LOAD_USER_INFO_FAILURE,
+      type: LOAD_MY_INFO_FAILURE,
       error: err.response.data,
     });
   }
@@ -242,8 +245,8 @@ function* changeNickname(action) {
   }
 }
 
-function* watchLoadUserInfo() {
-  yield takeLatest(LOAD_USER_INFO_REQUEST, loadUserInfo);
+function* watchLoadMyInfo() {
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
 
 function* watchLogin() {
@@ -284,7 +287,7 @@ function* watchChangeNickname() {
 
 export default function* userSaga() {
   yield all([
-    fork(watchLoadUserInfo),
+    fork(watchLoadMyInfo),
     fork(watchLogin),
     fork(watchLogOut),
     fork(watchSignUp),
