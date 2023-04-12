@@ -15,7 +15,7 @@ export class UsersService {
   ) {}
 
   // 사용자 정보 가져오기
-  async getUserInfo(User: Users) {
+  async getMyInfo(User: Users) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -39,6 +39,44 @@ export class UsersService {
           'Followings',
           'Followers',
           'Likes',
+        ])
+        .getOne();
+
+      await queryRunner.commitTransaction();
+      return user;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async getUserInfo(userId: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const user = queryRunner.manager
+        .getRepository(Users)
+        .createQueryBuilder('User')
+        .leftJoinAndSelect('User.Posts', 'Posts')
+        .leftJoinAndSelect('User.Likes', 'Likes')
+        .leftJoinAndSelect('User.Followings', 'Followings')
+        // .innerJoinAndSelect('Followings.Following', 'followingUser')
+        // .innerJoinAndSelect('Followings.Follower', 'followUser')
+
+        .leftJoinAndSelect('User.Followers', 'Followers')
+        // .innerJoinAndSelect('Followers.Following', 'userFollowing')
+        // .innerJoinAndSelect('Followers.Follower', 'userFollower')
+        .where('User.id = :id', { id: userId })
+        .select([
+          'User.id',
+          'User.nickname',
+          'Posts',
+          'Likes',
+          'Followings',
+          'Followers',
         ])
         .getOne();
 

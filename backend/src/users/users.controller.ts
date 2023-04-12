@@ -25,8 +25,14 @@ export class UsersController {
   // 여기 수정해야 된다.
   @ApiOperation({ summary: '로그인 유지' })
   @Get('/')
-  async getUserInfo(@User() user) {
-    return this.userService.getUserInfo(user);
+  async getMyInfo(@User() user) {
+    return this.userService.getMyInfo(user);
+  }
+
+  @ApiOperation({ summary: '특정 사용자 정보 가져오기' })
+  @Get('/:id')
+  async getUserInfo(@Param('id') id: number) {
+    return this.userService.getUserInfo(id);
   }
 
   @ApiOperation({ summary: '회원가입' })

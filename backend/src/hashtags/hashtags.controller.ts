@@ -10,12 +10,7 @@ export class HashtagsController {
   // 해시태그 가져오기
   @Get('/:tag')
   async loadHashtagPosts(@Param('tag') param: string, @Query() query) {
-    console.log('--------');
-    console.log(param);
-    const tag = decodeURIComponent(param);
-    console.log('태그 내용', tag);
-
-    console.log('lastId', query.lastId);
-    console.log('--------');
+    const lastId = parseInt(query.lastId, 10);
+    return await this.hashtagService.getHashtagPosts(param, lastId);
   }
 }

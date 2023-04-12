@@ -13,4 +13,9 @@ export class HashtagsService {
     @InjectRepository(Posthashtag)
     private dataSource: DataSource,
   ) {}
+
+  async getHashtagPosts(content: string, lastId: number) {
+    console.log('찾을 해시태그 문구', content);
+    console.log('마지막 게시물 아이디', lastId);
+  }
 }
