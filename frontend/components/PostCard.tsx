@@ -20,12 +20,15 @@ import {
   LikeTwoTone,
   MessageOutlined,
   RetweetOutlined,
+  SearchOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";
 import FollowButton from "./FollowButton";
+import Link from "next/link";
+import Router from "next/router";
 
 type PostProp = {
   post: PostType;
@@ -89,6 +92,11 @@ const PostCard = ({ post }: PostProp) => {
     });
   }, [dispatch, post.id, id]);
 
+  const onViewDetail = useCallback(() => {
+    const path = `post/${post.id}`;
+    Router.push(path);
+  }, [post.id]);
+
   return (
     <div style={{ marginBottom: "20px" }}>
       <Card
@@ -107,6 +115,7 @@ const PostCard = ({ post }: PostProp) => {
             <LikeOutlined key="heart" onClick={onLike} />
           ),
           <MessageOutlined key="message" onClick={onToggleComment} />,
+          <SearchOutlined key="ViewDetail" onClick={onViewDetail} />,
           <Popover
             key="more"
             content={
