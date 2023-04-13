@@ -89,6 +89,119 @@ export class UsersService {
     }
   }
 
+  async getUserPosts(userId: number, lastId: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      if (lastId) {
+        const posts = await queryRunner.manager
+          .getRepository(Users)
+          .createQueryBuilder('User')
+          .leftJoinAndSelect('User.Posts', 'Posts')
+          .leftJoinAndSelect('Posts.User', 'PostsUser')
+          .leftJoinAndSelect('Posts.Images', 'Images')
+          .leftJoinAndSelect('Posts.Likes', 'Likes')
+          .leftJoinAndSelect('Posts.Retweet', 'Retwitt')
+          .leftJoinAndSelect('Retwitt.User', 'RetwittUser')
+          .leftJoinAndSelect('Retwitt.Images', 'RetwittImages')
+          .leftJoinAndSelect('Retwitt.Likes', 'RetwittLikes')
+          .leftJoinAndSelect('Retwitt.Posthashtags', 'RetwittPosthashtags')
+          .leftJoinAndSelect('Retwitt.Comments', 'RetwittComments')
+          .leftJoinAndSelect('RetwittComments.User', 'RetwittCommentsUser')
+          .leftJoinAndSelect('Posts.Comments', 'Comments')
+          .leftJoinAndSelect('Comments.User', 'commentsUser')
+          .select([
+            'User.id',
+            'User.nickname',
+            'Posts.id',
+            'Posts.content',
+            'PostsUser.id',
+            'PostsUser.nickname',
+            'Images.id',
+            'Images.src',
+            'Images.postId',
+            'Likes.userId',
+            'Likes.postId',
+            'Retwitt',
+            'RetwittUser.id',
+            'RetwittUser.nickname',
+            'RetwittImages',
+            'RetwittLikes',
+            'RetwittPosthashtags',
+            'RetwittComments',
+            'RetwittCommentsUser.id',
+            'RetwittCommentsUser.nickname',
+            'Comments',
+            'commentsUser.id',
+            'commentsUser.nickname',
+          ])
+          .orderBy('Posts.createdAt', 'DESC')
+          .addOrderBy('Comments.createdAt', 'DESC')
+          .where('User.id = :id', { id: userId })
+          .andWhere('Posts.id < :id', { id: lastId })
+          .limit(10)
+          .getMany();
+      }
+
+      const posts = await queryRunner.manager
+        .getRepository(Users)
+        .createQueryBuilder('User')
+        .leftJoinAndSelect('User.Posts', 'Posts')
+        .leftJoinAndSelect('Posts.User', 'PostUser')
+        .leftJoinAndSelect('Posts.Images', 'Images')
+        .leftJoinAndSelect('Posts.Likes', 'Likes')
+        .leftJoinAndSelect('Posts.Retweet', 'Retwitt')
+        .leftJoinAndSelect('Retwitt.User', 'RetwittUser')
+        .leftJoinAndSelect('Retwitt.Images', 'RetwittImages')
+        .leftJoinAndSelect('Retwitt.Likes', 'RetwittLikes')
+        .leftJoinAndSelect('Retwitt.Posthashtags', 'RetwittPosthashtags')
+        .leftJoinAndSelect('Retwitt.Comments', 'RetwittComments')
+        .leftJoinAndSelect('RetwittComments.User', 'RetwittCommentsUser')
+        .leftJoinAndSelect('Posts.Comments', 'Comments')
+        .leftJoinAndSelect('Comments.User', 'commentsUser')
+        .select([
+          'User.id',
+          'User.nickname',
+          'Posts.id',
+          'Posts.content',
+          'PostUser.id',
+          'PostUser.nickname',
+          'Images.id',
+          'Images.src',
+          'Images.postId',
+          'Likes.userId',
+          'Likes.postId',
+          'Retwitt',
+          'RetwittUser.id',
+          'RetwittUser.nickname',
+          'RetwittImages',
+          'RetwittLikes',
+          'RetwittPosthashtags',
+          'RetwittComments',
+          'RetwittCommentsUser.id',
+          'RetwittCommentsUser.nickname',
+          'Comments',
+          'commentsUser.id',
+          'commentsUser.nickname',
+        ])
+        .orderBy('Posts.createdAt', 'DESC')
+        .addOrderBy('Comments.createdAt', 'DESC')
+        .where('User.id = :id', { id: userId })
+        .limit(10)
+        .getMany();
+
+      await queryRunner.commitTransaction();
+      return posts;
+    } catch (error) {
+      console.error(error);
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
   /** 로그인 */
   async login(User: Users) {
     const queryRunner = this.dataSource.createQueryRunner();

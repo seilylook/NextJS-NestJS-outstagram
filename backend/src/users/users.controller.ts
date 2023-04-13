@@ -9,6 +9,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -16,6 +17,7 @@ import { User } from '../common/decoratos/user.decorator';
 import { LocalAuthGuard } from '../auth/local-auth.guard';
 import { NotLoggedInGuard } from '../auth/not-logged-in.guard';
 import { LoggedInGuard } from '../auth/logged-in.guard';
+import { query } from 'express';
 
 @ApiTags('USERS')
 @Controller('users')
@@ -33,6 +35,14 @@ export class UsersController {
   @Get('/:id')
   async getUserInfo(@Param('id') id: number) {
     return this.userService.getUserInfo(id);
+  }
+
+  @ApiOperation({ summary: '특정 사용자 게시물 가져오기' })
+  @Get('/:userId/posts')
+  async getUserPosts(@Param('userId') userId: number, @Query() query) {
+    const lastId = parseInt(query.lastId, 10);
+    // console.log('사용자 아이디', userId);
+    return this.userService.getUserPosts(userId, lastId);
   }
 
   @ApiOperation({ summary: '회원가입' })

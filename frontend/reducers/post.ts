@@ -39,6 +39,10 @@ export const initialState = {
   loadPostDone: false,
   loadPostError: null,
 
+  loadUserPostsLoading: false,
+  loadUserPostsDone: false,
+  loadUserPostsError: null,
+
   likePostLoading: false, // 좋아요 시도 중
   likePostDone: false,
   likePostError: null,
@@ -87,6 +91,10 @@ export const LOAD_POST_REQUEST = "LOAD_POST_REQUEST";
 export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
 export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
 
+export const LOAD_USER_POSTS_REQUEST = "LOAD_USER_POSTS_REQUEST";
+export const LOAD_USER_POSTS_SUCCESS = "LOAD_USER_POSTS_SUCCESS";
+export const LOAD_USER_POSTS_FAILURE = "LOAD_USER_POSTS_FAILURE";
+
 export const LIKE_POST_REQUEST = "LIKE_POST_REQUEST";
 export const LIKE_POST_SUCCESS = "LIKE_POST_SUCCESS";
 export const LIKE_POST_FAILURE = "LIKE_POST_FAILURE";
@@ -112,6 +120,7 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
     switch (action.type) {
       case LOAD_POSTS_REQUEST:
       case LOAD_HASHTAG_POSTS_REQUEST:
+      case LOAD_USER_POSTS_REQUEST:
         draft.loadPostsLoading = true;
         draft.loadPostsDone = false;
         draft.loadPostsError = null;
@@ -119,6 +128,7 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
 
       case LOAD_POSTS_SUCCESS:
       case LOAD_HASHTAG_POSTS_SUCCESS:
+      case LOAD_USER_POSTS_SUCCESS:
         draft.loadPostsLoading = false;
         draft.loadPostsDone = true;
         draft.mainPosts = draft.mainPosts.concat(action.data);
@@ -127,6 +137,7 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
 
       case LOAD_POSTS_FAILURE:
       case LOAD_HASHTAG_POSTS_FAILURE:
+      case LOAD_USER_POSTS_FAILURE:
         draft.loadPostsLoading = false;
         draft.loadPostsError = action.error;
         break;
