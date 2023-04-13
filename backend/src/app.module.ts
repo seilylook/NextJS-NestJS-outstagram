@@ -36,6 +36,8 @@ import { HashtagsService } from './hashtags/hashtags.service';
     HashtagsModule,
     Users,
     Posts,
+    Hashtags,
+    Posthashtag,
     TypeOrmModule.forRoot(ormconfig),
     TypeOrmModule.forFeature([
       Users,

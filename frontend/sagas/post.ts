@@ -95,6 +95,7 @@ function* loadHashtagPosts(action) {
   try {
     const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
 
+    console.log(result);
     yield put({
       type: LOAD_HASHTAG_POSTS_SUCCESS,
       data: result.data,
