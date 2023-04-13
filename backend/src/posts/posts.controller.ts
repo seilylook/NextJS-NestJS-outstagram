@@ -69,6 +69,12 @@ export class PostsController {
     return await this.postsService.loadAllPosts(lastId);
   }
 
+  // 특정 게시물 가져오기
+  @Get('/:id')
+  async loadSinglePost(@Param('id') id: number) {
+    return await this.postsService.loadSinglePost(id);
+  }
+
   // 게시글 작성
   @Post('/')
   @FormDataRequest()

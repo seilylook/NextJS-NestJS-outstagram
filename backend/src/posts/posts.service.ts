@@ -163,6 +163,63 @@ export class PostsService {
     }
   }
 
+  async loadSinglePost(postId: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const post = await queryRunner.manager
+        .getRepository(Posts)
+        .createQueryBuilder('Post')
+        .leftJoinAndSelect('Post.User', 'User')
+        .leftJoinAndSelect('Post.Images', 'Images')
+        .leftJoinAndSelect('Post.Likes', 'Likes')
+        .leftJoinAndSelect('Post.Posthashtags', 'Posthashtags')
+        .leftJoinAndSelect('Post.Retweet', 'Retwitt')
+        .leftJoinAndSelect('Retwitt.User', 'RetwittUser')
+        .leftJoinAndSelect('Retwitt.Images', 'RetwittImages')
+        .leftJoinAndSelect('Retwitt.Likes', 'RetwittLikes')
+        .leftJoinAndSelect('Retwitt.Posthashtags', 'RetwittPosthashtags')
+        .leftJoinAndSelect('Retwitt.Comments', 'RetwittComments')
+        .leftJoinAndSelect('RetwittComments.User', 'RetwittCommentsUser')
+        .leftJoinAndSelect('Post.Comments', 'Comments')
+        .leftJoinAndSelect('Comments.User', 'commentsUser')
+        .select([
+          'Post.id',
+          'Post.content',
+          'User.id',
+          'User.nickname',
+          'Images',
+          'Likes.userId',
+          'Likes.postId',
+          'Posthashtags',
+          'Retwitt',
+          'RetwittUser.id',
+          'RetwittUser.nickname',
+          'RetwittImages',
+          'RetwittLikes',
+          'RetwittPosthashtags',
+          'RetwittComments',
+          'RetwittCommentsUser.id',
+          'RetwittCommentsUser.nickname',
+          'Comments',
+          'commentsUser.id',
+          'commentsUser.nickname',
+        ])
+        .where('Post.id = :id', { id: postId })
+        .getOne();
+
+      await queryRunner.commitTransaction();
+      return post;
+    } catch (error) {
+      console.error(error);
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
   async addPost(user: Users, postData) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();

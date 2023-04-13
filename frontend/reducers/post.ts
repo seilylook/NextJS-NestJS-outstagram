@@ -35,6 +35,10 @@ export const initialState = {
   loadPostsDone: false,
   loadPostsError: null,
 
+  loadPostLoading: false, // 특정 게시물 로드 중
+  loadPostDone: false,
+  loadPostError: null,
+
   likePostLoading: false, // 좋아요 시도 중
   likePostDone: false,
   likePostError: null,
@@ -58,6 +62,7 @@ export const initialState = {
   hadMorePosts: true,
   mainPosts: [],
   imagePaths: [],
+  singlePost: null,
 };
 
 export type PostReducerState = typeof initialState;
@@ -77,6 +82,10 @@ export const REMOVE_POST_FAILURE = "REMOVE_POST_FAILURE";
 export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
 export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS";
 export const LOAD_POSTS_FAILURE = "LOAD_POSTS_FAILURE";
+
+export const LOAD_POST_REQUEST = "LOAD_POST_REQUEST";
+export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
+export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
 
 export const LIKE_POST_REQUEST = "LIKE_POST_REQUEST";
 export const LIKE_POST_SUCCESS = "LIKE_POST_SUCCESS";
@@ -120,6 +129,23 @@ const reducer = (state: PostReducerState = initialState, action: AnyAction) =>
       case LOAD_HASHTAG_POSTS_FAILURE:
         draft.loadPostsLoading = false;
         draft.loadPostsError = action.error;
+        break;
+
+      case LOAD_POST_REQUEST:
+        draft.loadPostLoading = true;
+        draft.loadPostDone = false;
+        draft.loadPostError = null;
+        break;
+
+      case LOAD_POST_SUCCESS:
+        draft.loadPostLoading = false;
+        draft.loadPostDone = true;
+        draft.singlePost = action.data;
+        break;
+
+      case LOAD_POST_FAILURE:
+        draft.loadPostLoading = false;
+        draft.loadPostError = action.error;
         break;
 
       case ADD_POST_REQUEST:
