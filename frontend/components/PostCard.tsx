@@ -162,9 +162,7 @@ const PostCard = ({ post }: PostProp) => {
             <Card.Meta
               avatar={
                 <Link href={`user/${post.Retweet.User.id}`}>
-                  <a>
-                    <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
-                  </a>
+                  <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
                 </Link>
               }
               title={post.Retweet.User.nickname}
@@ -175,9 +173,7 @@ const PostCard = ({ post }: PostProp) => {
           <Card.Meta
             avatar={
               <Link href={`user/${post.User.id}`}>
-                <a>
-                  <Avatar>{post.User.nickname[0]}</Avatar>
-                </a>
+                <Avatar>{post.User.nickname[0]}</Avatar>
               </Link>
             }
             title={post.User.nickname}

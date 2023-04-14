@@ -85,19 +85,19 @@ const User = () => {
         <Card
           actions={[
             <div key="twit">
-              짹쨱
+              게시글
               <br />
-              {userInfo.Posts}
+              {userInfo.Posts.length}
             </div>,
             <div key="following">
               팔로잉
               <br />
-              {userInfo.Followings}
+              {userInfo.Followings.length}
             </div>,
             <div key="follower">
               팔로워
               <br />
-              {userInfo.Followers}
+              {userInfo.Followers.length}
             </div>,
           ]}
         >
@@ -124,12 +124,12 @@ export const getServerSideProps = wrapper.getServerSideProps(
       }
 
       store.dispatch({
-        type: LOAD_MY_INFO_REQUEST,
+        type: LOAD_USER_POSTS_REQUEST,
+        data: params.id,
       });
 
       store.dispatch({
-        type: LOAD_USER_POSTS_REQUEST,
-        data: params.id,
+        type: LOAD_MY_INFO_REQUEST,
       });
 
       store.dispatch({

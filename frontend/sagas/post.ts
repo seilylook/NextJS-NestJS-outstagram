@@ -89,7 +89,7 @@ function* loadPost(action) {
 }
 
 function loadUserPostsAPI(data, lastId) {
-  return axios.get(`/users/${data}/posts?lastId=${lastId || 0}`);
+  return axios.get(`/posts/${data}/posts?lastId=${lastId || 0}`);
 }
 
 function* loadUserPosts(action) {

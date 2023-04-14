@@ -75,6 +75,15 @@ export class PostsController {
     return await this.postsService.loadSinglePost(id);
   }
 
+  // 사용자가 작성한 게시글 모두 가져오기
+  @Get('/:userId/posts')
+  async getUserPosts(@Param('userId') userId: number, @Query() query) {
+    const lastId = parseInt(query.lastId, 10);
+    console.log('사용자 아이디', userId);
+
+    return await this.postsService.getUserPosts(userId, lastId);
+  }
+
   // 게시글 작성
   @Post('/')
   @FormDataRequest()
