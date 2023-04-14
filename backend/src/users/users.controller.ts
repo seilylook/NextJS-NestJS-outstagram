@@ -32,9 +32,13 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: '특정 사용자 정보 가져오기' })
-  @Get('/:id')
-  async getUserInfo(@Param('id') id: number) {
-    return this.userService.getUserInfo(id);
+  @Get('/:userId')
+  async getUserInfo(@Param('userId') userId: number) {
+    // console.log('--------');
+    // console.log('찾을 사용자 데이터', userId);
+    // console.log('--------');
+    // 여기서 에러가 발생한다.
+    // return this.userService.getUserInfo(userId);
   }
 
   @ApiOperation({ summary: '특정 사용자 게시물 가져오기' })
@@ -42,7 +46,7 @@ export class UsersController {
   async getUserPosts(@Param('userId') userId: number, @Query() query) {
     const lastId = parseInt(query.lastId, 10);
     // console.log('사용자 아이디', userId);
-    return this.userService.getUserPosts(userId, lastId);
+    return await this.userService.getUserPosts(userId, lastId);
   }
 
   @ApiOperation({ summary: '회원가입' })

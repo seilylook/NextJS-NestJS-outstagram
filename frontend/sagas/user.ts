@@ -57,6 +57,26 @@ function* loadMyInfo(action) {
   }
 }
 
+function loadUserInfoAPI(data) {
+  return axios.get(`/users/${data}`);
+}
+
+function* loadUserInfo(action) {
+  try {
+    const result = yield call(loadUserInfoAPI, action.data);
+    yield put({
+      type: LOAD_USER_INFO_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_USER_INFO_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function logInAPI(data) {
   return axios.post("/users/login", data);
 }
@@ -249,6 +269,10 @@ function* watchLoadMyInfo() {
   yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
 
+function* watchLoadUserInfo() {
+  yield takeLatest(LOAD_USER_INFO_REQUEST, loadUserInfo);
+}
+
 function* watchLogin() {
   yield takeLatest(LOG_IN_REQUEST, logIn);
 }
@@ -288,6 +312,7 @@ function* watchChangeNickname() {
 export default function* userSaga() {
   yield all([
     fork(watchLoadMyInfo),
+    fork(watchLoadUserInfo),
     fork(watchLogin),
     fork(watchLogOut),
     fork(watchSignUp),

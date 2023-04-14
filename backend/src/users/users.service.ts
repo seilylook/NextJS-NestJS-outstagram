@@ -57,29 +57,33 @@ export class UsersService {
     await queryRunner.startTransaction();
 
     try {
-      const user = queryRunner.manager
+      const user = await queryRunner.manager
         .getRepository(Users)
         .createQueryBuilder('User')
         .leftJoinAndSelect('User.Posts', 'Posts')
-        .leftJoinAndSelect('User.Likes', 'Likes')
         .leftJoinAndSelect('User.Followings', 'Followings')
-        // .innerJoinAndSelect('Followings.Following', 'followingUser')
-        // .innerJoinAndSelect('Followings.Follower', 'followUser')
-
         .leftJoinAndSelect('User.Followers', 'Followers')
-        // .innerJoinAndSelect('Followers.Following', 'userFollowing')
-        // .innerJoinAndSelect('Followers.Follower', 'userFollower')
-        .where('User.id = :id', { id: userId })
         .select([
           'User.id',
           'User.nickname',
           'Posts',
-          'Likes',
           'Followings',
           'Followers',
         ])
+        .where('User.id = :id', { id: userId })
         .getOne();
 
+      if (user) {
+        const result = {
+          Posts: user.Posts.length,
+          Followings: user.Followings.length,
+          Followers: user.Followers.length,
+        };
+
+        return result;
+      } else {
+        return null;
+      }
       await queryRunner.commitTransaction();
       return user;
     } catch (error) {

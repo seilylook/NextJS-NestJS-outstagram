@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import { LOAD_MY_INFO_REQUEST } from "../../reducers/user";
+import {
+  LOAD_MY_INFO_REQUEST,
+  LOAD_USER_INFO_REQUEST,
+} from "../../reducers/user";
 import { LOAD_USER_POSTS_REQUEST } from "@/reducers/post";
 
 import { Avatar, Card } from "antd";
@@ -126,6 +129,11 @@ export const getServerSideProps = wrapper.getServerSideProps(
 
       store.dispatch({
         type: LOAD_USER_POSTS_REQUEST,
+        data: params.id,
+      });
+
+      store.dispatch({
+        type: LOAD_USER_INFO_REQUEST,
         data: params.id,
       });
 

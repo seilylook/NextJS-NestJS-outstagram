@@ -7,7 +7,7 @@ export const initialState = {
   loadMyInfoDone: false,
   loadMyInfoError: null,
 
-  loadUserInfoLoading: false,
+  loadUserInfoLoading: false, // 다른 유저 정보 가져오기 시도 중
   loadUserInfoDone: false,
   loadUserInfoError: null,
 
