@@ -1,0 +1,9 @@
+version: "3"
+services:
+  frontend:
+    image: asia.gcr.io/outstagram-384310/outstagram-frontend:0.0
+    container_name: frontend
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile

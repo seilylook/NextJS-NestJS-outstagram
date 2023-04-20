@@ -1,15 +1,9 @@
 version: '3'
 services:
-  local-db:
-    image: library/mysql:8.0
+  backend:
+    image: asia.gcr.io/outstagram-384310/outstagram-backend:0.0
     container_name: backend
     restart: always
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      TZ: Asia/Seoul
-    volumes:
-      - ./db/mysql/data:/var/lib/mysql
-      - ./db/mysql/init:/docker-entrypoint-initdb.d
-    platform: linux/x86_64
+    build:
+      context: .
+      dockerfile: Dockerfile
